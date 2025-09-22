@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "II3510_CourseAPP_2526"
 include(":app")
+include(":app:labwork1")

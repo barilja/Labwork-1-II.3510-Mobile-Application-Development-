@@ -1,19 +1,13 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.dynamic.feature)
     alias(libs.plugins.kotlin.android)
 }
-
 android {
-    namespace = "com.tumme.ii3510_courseapp_2526"
+    namespace = "com.tumme.labwork1"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.tumme.ii3510_courseapp_2526"
         minSdk = 24
-        targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -33,14 +27,11 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-    dynamicFeatures += setOf(":app:labwork1")
 }
 
 dependencies {
-
+    implementation(project(":app"))
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
