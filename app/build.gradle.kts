@@ -56,26 +56,25 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    dependencies {
-        implementation("androidx.activity:activity-compose:1.11.0") // To use Compose in Activities
-        implementation("androidx.compose.ui:ui")
-        implementation("androidx.compose.material3:material3") // For Material Design 3 components (recommended)
+    implementation("androidx.activity:activity-compose:1.11.0") // To use Compose in Activities
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.material3:material3") // For Material Design 3 components (recommended)
 
-        implementation(platform("androidx.compose:compose-bom:2025.09.00"))
+    implementation(platform("androidx.compose:compose-bom:2025.09.00"))
 
-        implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.ui:ui-graphics")
 
-        implementation("androidx.compose.ui:ui-tooling-preview")
-        debugImplementation("androidx.compose.ui:ui-tooling")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    debugImplementation("androidx.compose.ui:ui-tooling")
 
-        // For Test (optionnel mais recommandé)
-        debugImplementation("androidx.compose.ui:ui-test-manifest")
-        androidTestImplementation(platform("androidx.compose:compose-bom:2025.09.00"))
-        androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    // For Test (optionnel mais recommandé)
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    androidTestImplementation(platform("androidx.compose:compose-bom:2025.09.00"))
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
 
-        // implementation("androidx.compose.foundation:foundation")
-        // implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3")
-        implementation("androidx.navigation:navigation-compose:2.8.0-beta06")
-    }
+    // implementation("androidx.compose.foundation:foundation")
+    // implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3")
+    implementation("androidx.navigation:navigation-compose:2.8.0-beta06")
+
 
 }
