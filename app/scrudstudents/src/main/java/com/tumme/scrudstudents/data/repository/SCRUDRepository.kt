@@ -51,6 +51,8 @@ class SCRUDRepository(
       @return The corresponding StudentEntity, or null if no student is found with that ID.
      */
     suspend fun getStudentById(id: Int) = studentDao.getStudentById(id)
+    suspend fun getStudentByEmail(email: String) = studentDao.getStudentByEmail(email)
+
 
     // Courses
     fun getAllCourses(): Flow<List<CourseEntity>> = courseDao.getAllCourses()
@@ -67,6 +69,7 @@ class SCRUDRepository(
     fun getAllTeachers(): Flow<List<TeacherEntity>> = teacherDao.getAllTeachers()
     suspend fun insertTeacher(teacher: TeacherEntity) = teacherDao.insert(teacher)
     suspend fun deleteTeacher(teacher: TeacherEntity) = teacherDao.delete(teacher)
+    suspend fun getTeacherByEmail(email: String) = teacherDao.getTeacherByEmail(email)
     suspend fun getTeacherById(id: Int) = teacherDao.getTeacherById(id)
     fun getAllTeaches(): Flow<List<TeachEntity>> = teachDao.getAllTeaches()
     suspend fun insertTeach(teach: TeachEntity) = teachDao.insert(teach)

@@ -69,6 +69,10 @@ class StudentListViewModel @Inject constructor(
       @return The found StudentEntity, or null if no student with that ID exists.
      */
     suspend fun findStudent(id: Int) = repo.getStudentById(id)
+    suspend fun getStudentByEmail(email: String) = repo.getStudentByEmail(email)
+
+
+
 
 }
 

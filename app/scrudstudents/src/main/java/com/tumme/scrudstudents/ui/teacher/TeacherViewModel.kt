@@ -69,6 +69,9 @@ class TeacherViewModel @Inject constructor(
       @return The found TeacherEntity, or null if no teacher with that ID exists.
      */
     suspend fun findTeacher(id: Int) = repo.getTeacherById(id)
+    suspend fun getTeacherByEmail(email: String) = repo.getTeacherByEmail(email)
+
+
 
 }
 
