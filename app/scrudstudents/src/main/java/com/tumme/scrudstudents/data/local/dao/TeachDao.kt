@@ -1,0 +1,23 @@
+package com.tumme.scrudstudents.data.local.dao
+
+import androidx.room.*
+import com.tumme.scrudstudents.data.local.model.TeachEntity
+import kotlinx.coroutines.flow.Flow
+
+@Dao
+interface TeachDao {
+    @Query("SELECT * FROM teach")
+    fun getAllTeaches(): Flow<List<TeachEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(teach: TeachEntity)
+
+    @Delete
+    suspend fun delete(teach: TeachEntity)
+
+    @Query("SELECT * FROM teach WHERE teacherId = :tId")
+    fun getTeachByTeacher(tId: Int): Flow<List<TeachEntity>>
+
+    @Query("SELECT * FROM teach WHERE courseId = :cId")
+    fun getTeachesByCourse(cId: Int): Flow<List<TeachEntity>>
+}
