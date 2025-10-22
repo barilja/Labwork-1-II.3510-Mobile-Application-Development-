@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "courses")
 data class CourseEntity(
     @PrimaryKey val idCourse: Int,
-    val nameCourse: String,
+    var nameCourse: String,
     val ectsCourse: Float,
     val levelCourse: LevelCourse
 )

@@ -1,8 +1,10 @@
-package com.tumme.scrudstudents.ui.student
-import com.tumme.scrudstudents.ui.components.TableHeader
+package com.tumme.scrudstudents.ui.subscribe
+
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.List
@@ -12,29 +14,26 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tumme.scrudstudents.ui.components.TableHeader
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StudentListScreen(
-    //Injects the StudentListViewModel using Hilt.
-    viewModel: StudentListViewModel = hiltViewModel(),
-    //lambda function to handle navigation to the student creation form.
+fun SubscribeListScreen(
+    viewModel: SubscribeViewModel = hiltViewModel(),
     onNavigateToForm: () -> Unit = {},
-    //lambda function to handle navigation to the student detail screen, passing the student's ID.
-    onNavigateToDetail: (Int) -> Unit = {},
+    onNavigateToDetail: (Int,Int,Float) -> Unit = {_,_,_->},//lambdas that pass more than 1 parameter
+    onNavigateToEdit: (Int,Int,Float) -> Unit = {_,_,_->},
     //navigation lambdas for the footer
     onNavigateToCourses: () -> Unit = {},
     onNavigateToStudents: () -> Unit = {},
     onNavigateToSubscriptions: () -> Unit = {}
 ) {
-    //Collects the list of students emitted from the flow of the ViewModel as a State object. The UI will recompose when this state changes.
-    val students by viewModel.students.collectAsState()
-    //val scaffoldState = rememberScaffoldState()
-    val coroutineScope = rememberCoroutineScope()
+    val subscribes by viewModel.subscribes.collectAsState()
+    val scrollState = rememberScrollState()
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Students") })
+            TopAppBar(title = { Text("Subscriptions") })
         },
         floatingActionButton = {
             FloatingActionButton(onClick = onNavigateToForm) {
@@ -53,35 +52,38 @@ fun StudentListScreen(
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.People, contentDescription = "Students") },
                     label = { Text("Students") },
-                    selected = true,
+                    selected = false,
                     onClick = onNavigateToStudents
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.List, contentDescription = "Subscriptions") },
                     label = { Text("Subscriptions") },
-                    selected = false,
+                    selected = true,
                     onClick = onNavigateToSubscriptions
                 )
             }
         }
     ) { padding ->
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(padding)
-            .padding(16.dp)
-        ) {//header of the table for students attributes and actions
-            TableHeader(cells = listOf("DOB","Last", "First", "Gender", "Actions"),
-                weights = listOf(0.25f, 0.25f, 0.25f, 0.15f, 0.10f))
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(16.dp)
+        ) {
+            TableHeader(
+                cells = listOf("Course", "Student", "Score", "Actions"),
+                weights = listOf(0.25f, 0.25f, 0.25f, 0.25f)
+            )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(students) { student ->
-                    StudentRow(
-                        student = student,
-                        onEdit = { },
-                        onDelete = { viewModel.deleteStudent(student) },
-                        onView = { onNavigateToDetail(student.idStudent) },//callbacks for when an action icon is clicked
+                items(subscribes) { subscribe ->
+                    SubscribeRow(
+                        subscribe = subscribe,
+                        onEdit = { onNavigateToEdit(subscribe.courseId,subscribe.studentId,subscribe.score) },
+                        onDelete = { viewModel.deleteSubscription(subscribe) },
+                        onView = { onNavigateToDetail(subscribe.courseId,subscribe.studentId,subscribe.score) },
                         onShare = { }
                     )
                 }
@@ -89,4 +91,3 @@ fun StudentListScreen(
         }
     }
 }
-//part of the view layer that interacts with the viewmodel layer to populate the components in the ui
