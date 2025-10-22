@@ -10,6 +10,8 @@ data class StudentEntity(
     val lastName: String, //several basic information regarding students
     val firstName: String,
     val dateOfBirth: Date,
-    val gender: Gender
+    val gender: Gender,
+    val email: String,
+    val password: String
 )
 //part of the model layer that contains data useful to populate the UI view

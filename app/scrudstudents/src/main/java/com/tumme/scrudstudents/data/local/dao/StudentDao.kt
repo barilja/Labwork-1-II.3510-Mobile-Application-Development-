@@ -6,6 +6,10 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface StudentDao {
+
+    @Query("SELECT * FROM students WHERE email = :email LIMIT 1")
+    suspend fun getStudentByEmail(email: String): StudentEntity?
+
     @Query("SELECT * FROM students ORDER BY lastName, firstName") //query to obtain the list of all students ordered by their name.
     fun getAllStudents(): Flow<List<StudentEntity>> //the list of students is outputted in a flow that works asynchronously, so whenever the data is updated the flow is updated too.
 

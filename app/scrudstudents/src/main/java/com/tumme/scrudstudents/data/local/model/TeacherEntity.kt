@@ -9,6 +9,7 @@ data class TeacherEntity (
     val firstName: String,
     val lastName: String,
     val dateOfBirth: Date,
-    val email:String
+    val email:String,
+    val password:String
 )
 

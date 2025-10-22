@@ -6,6 +6,10 @@ import com.tumme.scrudstudents.data.local.model.TeacherEntity
 import kotlinx.coroutines.flow.Flow
 
 interface TeacherDao {
+
+    @Query("SELECT * FROM teachers WHERE email = :email LIMIT 1")
+    suspend fun getTeacherByEmail(email: String): TeacherEntity?
+
     @Query("SELECT * FROM teachers ORDER BY lastName, firstName") //query to obtain the list of all teachers ordered by their name.
     fun getAllTeachers(): Flow<List<TeacherEntity>> //the list of teachers is outputted in a flow that works asynchronously, so whenever the data is updated the flow is updated too.
 

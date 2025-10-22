@@ -3,15 +3,21 @@ package com.tumme.scrudstudents.data.repository
 import com.tumme.scrudstudents.data.local.dao.CourseDao
 import com.tumme.scrudstudents.data.local.dao.StudentDao
 import com.tumme.scrudstudents.data.local.dao.SubscribeDao
+import com.tumme.scrudstudents.data.local.dao.TeacherDao
+import com.tumme.scrudstudents.data.local.dao.TeachDao
 import com.tumme.scrudstudents.data.local.model.CourseEntity
 import com.tumme.scrudstudents.data.local.model.StudentEntity
 import com.tumme.scrudstudents.data.local.model.SubscribeEntity
+import com.tumme.scrudstudents.data.local.model.TeacherEntity
+import com.tumme.scrudstudents.data.local.model.TeachEntity
 import kotlinx.coroutines.flow.Flow
 
 class SCRUDRepository(
     private val studentDao: StudentDao, // Data Access Object for student-related database operations.
     private val courseDao: CourseDao,
-    private val subscribeDao: SubscribeDao
+    private val subscribeDao: SubscribeDao,
+    private val teacherDao: TeacherDao,
+    private val teachDao: TeachDao
 ) {
     //Students
     /*
@@ -58,5 +64,17 @@ class SCRUDRepository(
     fun getSubscribesByCourse(cId: Int): Flow<List<SubscribeEntity>> = subscribeDao.getSubscribesByCourse(cId)
     suspend fun insertSubscribe(subscribe: SubscribeEntity) = subscribeDao.insert(subscribe)
     suspend fun deleteSubscribe(subscribe: SubscribeEntity) = subscribeDao.delete(subscribe)
+    fun getAllTeachers(): Flow<List<TeacherEntity>> = teacherDao.getAllTeachers()
+    suspend fun insertTeacher(teacher: TeacherEntity) = teacherDao.insert(teacher)
+    suspend fun deleteTeacher(teacher: TeacherEntity) = teacherDao.delete(teacher)
+    suspend fun getTeacherById(id: Int) = teacherDao.getTeacherById(id)
+    fun getAllTeaches(): Flow<List<TeachEntity>> = teachDao.getAllTeaches()
+    suspend fun insertTeach(teach: TeachEntity) = teachDao.insert(teach)
+    suspend fun deleteTeach(teach: TeachEntity) = teachDao.delete(teach)
+    fun getTeachesByTeacher(tId: Int): Flow<List<TeachEntity>> = teachDao.getTeachesByTeacher(tId)
+    fun getTeachesByCourse(cId: Int): Flow<List<TeachEntity>> = teachDao.getTeachesByCourse(cId)
+
+
+
 }
 //part of the model layer that mainly interacts with the viewmodel layer to update the view layer
