@@ -1,4 +1,4 @@
-package com.tumme.scrudstudents.ui.auth
+package com.tumme.scrudstudents.ui.authentication
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -17,7 +17,8 @@ import kotlinx.coroutines.launch
 fun LoginScreen(
     studentViewModel: StudentListViewModel = hiltViewModel(),
     teacherViewModel: TeacherViewModel = hiltViewModel(),
-    onLoginSuccess: (role: String, userId: Int) -> Unit = { _, _ -> }
+    onLoginSuccess: (role: String, userId: Int) -> Unit = { _, _ -> },
+    onNavigateToRegister: () -> Unit = {}
 ) {
     var role by remember { mutableStateOf("Student") }
     var email by remember { mutableStateOf("") }
@@ -27,7 +28,7 @@ fun LoginScreen(
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Login") }) }
+        topBar = { TopAppBar(title = { Text("Login page") }) }
     ) { padding ->
         Column(
             modifier = Modifier
@@ -125,13 +126,21 @@ fun LoginScreen(
                                 }
                             }
                         } catch (e: Exception) {
-                            errorMessage = "Error: ${e.message}"
+                            //errorMessage = "Error: ${e.message}"
                         }
                     }
                 },
-                modifier = Modifier.align(Alignment.End)
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
                 Text("Login")
+            }
+            Spacer(Modifier.height(12.dp))
+
+            TextButton(
+                onClick = { onNavigateToRegister() },
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Text("Don't have an account? Register!")
             }
         }
     }

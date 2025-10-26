@@ -22,7 +22,8 @@ import java.util.*
 fun RegisterScreen(
     studentViewModel: StudentListViewModel = hiltViewModel(),
     teacherViewModel: TeacherViewModel = hiltViewModel(),
-    onRegistered: () -> Unit = {}
+    onRegistered: () -> Unit = {},
+    onNavigateToRegister: () -> Unit = {}
 ) {
     var userType by remember { mutableStateOf("Student") }
 
@@ -165,9 +166,17 @@ fun RegisterScreen(
                         errorMessage = "Error: ${e.message}"
                     }
                 },
-                modifier = Modifier.align(Alignment.End)
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
                 Text("Register")
+            }
+            Spacer(Modifier.height(12.dp))
+
+            TextButton(
+                onClick = { onNavigateToRegister() },
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Text("Already have an account? Login!")
             }
         }
     }

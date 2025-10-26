@@ -6,6 +6,8 @@ import com.tumme.scrudstudents.data.local.AppDatabase
 import com.tumme.scrudstudents.data.local.dao.CourseDao
 import com.tumme.scrudstudents.data.local.dao.StudentDao
 import com.tumme.scrudstudents.data.local.dao.SubscribeDao
+import com.tumme.scrudstudents.data.local.dao.TeacherDao
+import com.tumme.scrudstudents.data.local.dao.TeachDao
 import com.tumme.scrudstudents.data.repository.SCRUDRepository
 import dagger.Module
 import dagger.Provides
@@ -25,10 +27,12 @@ object AppModule {
     @Provides fun provideStudentDao(db: AppDatabase): StudentDao = db.studentDao()
     @Provides fun provideCourseDao(db: AppDatabase): CourseDao = db.courseDao()
     @Provides fun provideSubscribeDao(db: AppDatabase): SubscribeDao = db.subscribeDao()
+    @Provides fun provideTeacherDao(db: AppDatabase): TeacherDao = db.teacherDao()
+    @Provides fun provideTeachDao(db: AppDatabase): TeachDao = db.teachDao()
 
     @Provides
     @Singleton
     fun provideRepository(studentDao: StudentDao, courseDao: CourseDao,
-                          subscribeDao: SubscribeDao): SCRUDRepository =
-        SCRUDRepository(studentDao, courseDao, subscribeDao)
+                          subscribeDao: SubscribeDao,teacherDao: TeacherDao,teachDao: TeachDao): SCRUDRepository =
+        SCRUDRepository(studentDao, courseDao, subscribeDao, teacherDao, teachDao)
 }

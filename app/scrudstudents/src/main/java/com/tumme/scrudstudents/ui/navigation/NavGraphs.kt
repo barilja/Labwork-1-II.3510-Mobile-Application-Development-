@@ -19,6 +19,9 @@ import com.tumme.scrudstudents.ui.subscribe.SubscribeFormScreen
 import com.tumme.scrudstudents.ui.subscribe.SubscribeListScreen
 import com.tumme.scrudstudents.ui.subscribe.SubscribeDetailScreen
 import com.tumme.scrudstudents.ui.subscribe.SubscribeEditScreen
+//authentication ui import
+import com.tumme.scrudstudents.ui.authentication.LoginScreen
+import com.tumme.scrudstudents.ui.authentication.RegisterScreen
 
 object Routes {
     //student routes
@@ -35,12 +38,15 @@ object Routes {
     const val SUBSCRIBE_LIST = "subscribe_list"
     const val SUBSCRIBE_DETAIL= "subscribe_detail/{courseId}/{studentId}/{score}"
     const val SUBSCRIBE_EDIT= "subscribe_edit/{courseId}/{studentId}/{score}"
+    //authentication routes
+    const val LOGIN = "login"
+    const val REGISTER = "register"
 }
 
 @Composable
 fun AppNavHost() {
     val navController = rememberNavController()//the app starts in the student list screen
-    NavHost(navController, startDestination = Routes.STUDENT_LIST) {
+    NavHost(navController, startDestination = Routes.LOGIN) {
         composable(Routes.STUDENT_LIST) {
             StudentListScreen(//different routes reachable from this screen
                 onNavigateToForm = { navController.navigate(Routes.STUDENT_FORM) },
@@ -117,6 +123,15 @@ fun AppNavHost() {
             val score = backStackEntry.arguments?.getString("score")?.toFloat()
             SubscribeEditScreen(courseId = courseId!!, studentId = studentId!!, score = score!!, onSave = { navController.popBackStack() })
         }
-
+        composable(Routes.LOGIN) {
+        LoginScreen(
+            onNavigateToRegister = {navController.navigate(Routes.REGISTER)}
+        )
+        }
+        composable(Routes.REGISTER) {
+            RegisterScreen(
+                onNavigateToRegister = {navController.navigate(Routes.LOGIN)}
+            )
+        }
     }
 }

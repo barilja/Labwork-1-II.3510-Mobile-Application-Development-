@@ -29,6 +29,9 @@ fun StudentFormScreen(
     var dobText by remember { mutableStateOf("2000-01-01") } // The expected format is yyyy-MM-dd.
     //same as before but with default value for gender
     var gender by remember { mutableStateOf(Gender.NotConcerned) }
+    var email by remember {mutableStateOf("")}
+    var password by remember {mutableStateOf("")}
+
 
     //formats the date of birth to string
     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -65,7 +68,9 @@ fun StudentFormScreen(
                 lastName = lastName,
                 firstName = firstName,
                 dateOfBirth = dob,
-                gender = gender
+                gender = gender,
+                email = email,
+                password = password
             )
             //calls the ViewModel to insert the new student into the database.
             viewModel.insertStudent(student)

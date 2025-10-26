@@ -4,7 +4,7 @@ import androidx.room.*
 import com.tumme.scrudstudents.data.local.model.StudentEntity
 import com.tumme.scrudstudents.data.local.model.TeacherEntity
 import kotlinx.coroutines.flow.Flow
-
+@Dao
 interface TeacherDao {
 
     @Query("SELECT * FROM teachers WHERE email = :email LIMIT 1")
