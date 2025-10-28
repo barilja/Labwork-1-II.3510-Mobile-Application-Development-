@@ -22,8 +22,8 @@ import java.util.*
 fun RegisterScreen(
     studentViewModel: StudentListViewModel = hiltViewModel(),
     teacherViewModel: TeacherViewModel = hiltViewModel(),
-    onRegistered: () -> Unit = {},
-    onNavigateToRegister: () -> Unit = {}
+    onRegistered: () -> Unit = {},        // called when registration is complete (navigate to login)
+    onNavigateToRegister: () -> Unit = {} // optional callback to login page link
 ) {
     var userType by remember { mutableStateOf("Student") }
 
@@ -34,15 +34,23 @@ fun RegisterScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    // Student-specific field
+    // Student-specific
     var gender by remember { mutableStateOf(Gender.Male) }
 
     val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
+    // Snackbar host state for success message
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    // State to trigger snackbar and navigation
+    var registrationSuccess by remember { mutableStateOf(false) }
+
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Register") }) }
+        topBar = { TopAppBar(title = { Text("Register") }) },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -52,7 +60,7 @@ fun RegisterScreen(
             horizontalAlignment = Alignment.Start
         ) {
 
-            // Toggle between Student / Teacher
+            // --- Switch between Student and Teacher ---
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(
                     onClick = { userType = "Student" },
@@ -77,7 +85,7 @@ fun RegisterScreen(
 
             Spacer(Modifier.height(16.dp))
 
-            // Common input fields
+            // --- Input fields ---
             TextField(value = firstName, onValueChange = { firstName = it }, label = { Text("First Name") }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
             TextField(value = lastName, onValueChange = { lastName = it }, label = { Text("Last Name") }, modifier = Modifier.fillMaxWidth())
@@ -94,7 +102,7 @@ fun RegisterScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
             )
 
-            // Student-specific input
+            // --- Student-specific ---
             if (userType == "Student") {
                 Spacer(Modifier.height(8.dp))
                 Text("Gender:")
@@ -117,66 +125,73 @@ fun RegisterScreen(
 
             Spacer(Modifier.height(16.dp))
 
-            // Show validation errors
+            // --- Error message ---
             errorMessage?.let {
                 Text(it, color = MaterialTheme.colorScheme.error)
                 Spacer(Modifier.height(8.dp))
             }
 
+            // --- Register button ---
             Button(
                 onClick = {
-                    try {
-                        val parsedDate = sdf.parse(dateOfBirthText)
-                        if (parsedDate == null) {
-                            errorMessage = "Invalid date format"
-                            return@Button
-                        }
-
-                        if (email.isBlank() || password.isBlank()) {
-                            errorMessage = "Email and password cannot be empty"
-                            return@Button
-                        }
-
-                        if (userType == "Student") {
-                            val student = StudentEntity(
-                                idStudent = 0,
-                                firstName = firstName,
-                                lastName = lastName,
-                                dateOfBirth = parsedDate,
-                                gender = gender,
-                                email = email,
-                                password = password
-                            )
-                            studentViewModel.insertStudent(student)
-                        } else {
-                            val teacher = TeacherEntity(
-                                idTeacher = 0,
-                                firstName = firstName,
-                                lastName = lastName,
-                                dateOfBirth = parsedDate,
-                                email = email,
-                                password = password
-                            )
-                            teacherViewModel.insertTeacher(teacher)
-                        }
-
-                        onRegistered()
-
-                    } catch (e: Exception) {
-                        errorMessage = "Error: ${e.message}"
+                    val parsedDate = sdf.parse(dateOfBirthText)
+                    if (parsedDate == null) {
+                        errorMessage = "Invalid date format"
+                        return@Button
                     }
+                    if (email.isBlank() || password.isBlank()) {
+                        errorMessage = "Email and password cannot be empty"
+                        return@Button
+                    }
+
+                    if (userType == "Student") {
+                        val student = StudentEntity(
+                            idStudent = 0,
+                            firstName = firstName,
+                            lastName = lastName,
+                            dateOfBirth = parsedDate,
+                            gender = gender,
+                            email = email,
+                            password = password
+                        )
+                        studentViewModel.insertStudent(student)
+                    } else {
+                        val teacher = TeacherEntity(
+                            idTeacher = 0,
+                            firstName = firstName,
+                            lastName = lastName,
+                            dateOfBirth = parsedDate,
+                            email = email,
+                            password = password
+                        )
+                        teacherViewModel.insertTeacher(teacher)
+                    }
+
+                    errorMessage = null
+                    registrationSuccess = true
                 },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
                 Text("Register")
             }
+
             Spacer(Modifier.height(12.dp))
 
+            // --- Already have account ---
             TextButton(
                 onClick = { onNavigateToRegister() },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
                 Text("Already have an account? Login!")
+            }
+        }
+
+        // --- Snackbar and navigation effect ---
+        if (registrationSuccess) {
+            LaunchedEffect(registrationSuccess) {
+                snackbarHostState.showSnackbar("Registration successful!")
+                onRegistered()
+                registrationSuccess = false
             }
         }
     }

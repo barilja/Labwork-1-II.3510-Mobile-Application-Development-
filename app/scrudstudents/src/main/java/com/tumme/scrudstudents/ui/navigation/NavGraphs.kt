@@ -22,6 +22,10 @@ import com.tumme.scrudstudents.ui.subscribe.SubscribeEditScreen
 //authentication ui import
 import com.tumme.scrudstudents.ui.authentication.LoginScreen
 import com.tumme.scrudstudents.ui.authentication.RegisterScreen
+import com.tumme.scrudstudents.ui.teacher.TeacherHomeScreen
+//teacher ui import
+import com.tumme.scrudstudents.ui.teacher.TeacherHomeScreen
+
 
 object Routes {
     //student routes
@@ -41,6 +45,8 @@ object Routes {
     //authentication routes
     const val LOGIN = "login"
     const val REGISTER = "register"
+    //teacher routes
+    const val TEACHER_HOME= "teacher_home/{teacherId}"
 }
 
 @Composable
@@ -125,13 +131,28 @@ fun AppNavHost() {
         }
         composable(Routes.LOGIN) {
         LoginScreen(
-            onNavigateToRegister = {navController.navigate(Routes.REGISTER)}
+            onNavigateToRegister = {navController.navigate(Routes.REGISTER)},
+            onLoginSuccess = {role,id->
+                if(role=="Teacher"){
+                    navController.navigate("teacher_home/$id")
+                }else{
+                    navController.navigate(Routes.STUDENT_LIST)
+                }
+            }
         )
         }
         composable(Routes.REGISTER) {
             RegisterScreen(
-                onNavigateToRegister = {navController.navigate(Routes.LOGIN)}
+                onNavigateToRegister = {navController.navigate(Routes.LOGIN)},
+                onRegistered = {navController.navigate(Routes.LOGIN)}
             )
+        }
+        composable(
+            route = "teacher_home/{teacherId}",
+            arguments = listOf(navArgument("teacherId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val teacherId = backStackEntry.arguments?.getInt("teacherId") ?: -1
+            TeacherHomeScreen(teacherId)
         }
     }
 }

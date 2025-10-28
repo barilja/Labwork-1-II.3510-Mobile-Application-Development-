@@ -33,7 +33,6 @@ fun CourseDetailScreen(
         // Calls the suspend function on the ViewModel to find the courses by their ID and updates the state.
         course = viewModel.getCourseById(courseId)
     }
-
     Scaffold(topBar = {
         TopAppBar(title = { Text("Course details") }, navigationIcon = {
             IconButton(onClick = onBack) { Icon(Icons.Default.ArrowBack, contentDescription = "Back") }

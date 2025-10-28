@@ -26,9 +26,14 @@ fun LoginScreen(
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
     val coroutineScope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    // State to trigger snackbar and navigation
+    var loginSuccess by remember { mutableStateOf<Pair<String, Int>?>(null) }
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Login page") }) }
+        topBar = { TopAppBar(title = { Text("Login page") }) },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
         Column(
             modifier = Modifier
@@ -50,9 +55,8 @@ fun LoginScreen(
                         else
                             MaterialTheme.colorScheme.surfaceVariant
                     )
-                ) {
-                    Text("Student")
-                }
+                ) { Text("Student") }
+
                 Button(
                     onClick = { role = "Teacher" },
                     colors = ButtonDefaults.buttonColors(
@@ -61,14 +65,11 @@ fun LoginScreen(
                         else
                             MaterialTheme.colorScheme.surfaceVariant
                     )
-                ) {
-                    Text("Teacher")
-                }
+                ) { Text("Teacher") }
             }
 
             Spacer(Modifier.height(16.dp))
 
-            // Email input
             TextField(
                 value = email,
                 onValueChange = { email = it },
@@ -78,7 +79,6 @@ fun LoginScreen(
 
             Spacer(Modifier.height(8.dp))
 
-            // Password input
             TextField(
                 value = password,
                 onValueChange = { password = it },
@@ -89,7 +89,6 @@ fun LoginScreen(
 
             Spacer(Modifier.height(16.dp))
 
-            // Error message display
             errorMessage?.let {
                 Text(it, color = MaterialTheme.colorScheme.error)
                 Spacer(Modifier.height(8.dp))
@@ -112,7 +111,7 @@ fun LoginScreen(
                                     errorMessage = "Incorrect password."
                                 } else {
                                     errorMessage = null
-                                    onLoginSuccess("Student", student.idStudent)
+                                    loginSuccess = "Student" to student.idStudent
                                 }
                             } else {
                                 val teacher = teacherViewModel.getTeacherByEmail(email)
@@ -122,11 +121,10 @@ fun LoginScreen(
                                     errorMessage = "Incorrect password."
                                 } else {
                                     errorMessage = null
-                                    onLoginSuccess("Teacher", teacher.idTeacher)
+                                    loginSuccess = "Teacher" to teacher.idTeacher
                                 }
                             }
-                        } catch (e: Exception) {
-                            //errorMessage = "Error: ${e.message}"
+                        } catch (_: Exception) {
                         }
                     }
                 },
@@ -134,6 +132,7 @@ fun LoginScreen(
             ) {
                 Text("Login")
             }
+
             Spacer(Modifier.height(12.dp))
 
             TextButton(
@@ -141,6 +140,15 @@ fun LoginScreen(
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
                 Text("Don't have an account? Register!")
+            }
+        }
+
+        // --- Snackbar and navigation after login ---
+        loginSuccess?.let { (role, id) ->
+            LaunchedEffect(loginSuccess) {
+                snackbarHostState.showSnackbar("Login successful!")
+                onLoginSuccess(role, id)
+                loginSuccess = null
             }
         }
     }

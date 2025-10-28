@@ -3,11 +3,7 @@ package com.tumme.scrudstudents.di
 import android.content.Context
 import androidx.room.Room
 import com.tumme.scrudstudents.data.local.AppDatabase
-import com.tumme.scrudstudents.data.local.dao.CourseDao
-import com.tumme.scrudstudents.data.local.dao.StudentDao
-import com.tumme.scrudstudents.data.local.dao.SubscribeDao
-import com.tumme.scrudstudents.data.local.dao.TeacherDao
-import com.tumme.scrudstudents.data.local.dao.TeachDao
+import com.tumme.scrudstudents.data.local.dao.*
 import com.tumme.scrudstudents.data.repository.SCRUDRepository
 import dagger.Module
 import dagger.Provides
@@ -19,10 +15,13 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): AppDatabase =
-        Room.databaseBuilder(context, AppDatabase::class.java, "scrud-db").build()
+        Room.databaseBuilder(context, AppDatabase::class.java, "scrud-db")
+            .fallbackToDestructiveMigration() // ⚠️ This resets the DB if schema changes
+            .build()
 
     @Provides fun provideStudentDao(db: AppDatabase): StudentDao = db.studentDao()
     @Provides fun provideCourseDao(db: AppDatabase): CourseDao = db.courseDao()
@@ -32,7 +31,17 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideRepository(studentDao: StudentDao, courseDao: CourseDao,
-                          subscribeDao: SubscribeDao,teacherDao: TeacherDao,teachDao: TeachDao): SCRUDRepository =
-        SCRUDRepository(studentDao, courseDao, subscribeDao, teacherDao, teachDao)
+    fun provideRepository(
+        studentDao: StudentDao,
+        courseDao: CourseDao,
+        subscribeDao: SubscribeDao,
+        teacherDao: TeacherDao,
+        teachDao: TeachDao
+    ): SCRUDRepository = SCRUDRepository(
+        studentDao,
+        courseDao,
+        subscribeDao,
+        teacherDao,
+        teachDao
+    )
 }

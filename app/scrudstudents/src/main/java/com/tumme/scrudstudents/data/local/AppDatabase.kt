@@ -16,7 +16,7 @@ import com.tumme.scrudstudents.data.local.model.TeacherEntity
 
 // `entities`: Specifies all the table entities that belong in this database.
 @Database(entities = [StudentEntity::class, CourseEntity::class, SubscribeEntity::class,
-    TeacherEntity::class, TeachEntity::class], version = 1)
+    TeacherEntity::class, TeachEntity::class], version = 2)
 // The @TypeConverters annotation tells Room to use the defined Converters class for data type conversions (e.g., Date to Long).
 @TypeConverters(Converters::class)
 // This abstract class represents the app's database. It extends RoomDatabase.
