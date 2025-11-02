@@ -146,7 +146,7 @@ fun RegisterScreen(
 
                     if (userType == "Student") {
                         val student = StudentEntity(
-                            idStudent = 0,
+                            idStudent = (0..10000).random(),
                             firstName = firstName,
                             lastName = lastName,
                             dateOfBirth = parsedDate,
@@ -157,7 +157,7 @@ fun RegisterScreen(
                         studentViewModel.insertStudent(student)
                     } else {
                         val teacher = TeacherEntity(
-                            idTeacher = 0,
+                            idTeacher = (0..10000).random(),
                             firstName = firstName,
                             lastName = lastName,
                             dateOfBirth = parsedDate,

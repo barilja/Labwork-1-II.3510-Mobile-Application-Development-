@@ -152,7 +152,10 @@ fun AppNavHost() {
             arguments = listOf(navArgument("teacherId") { type = NavType.IntType })
         ) { backStackEntry ->
             val teacherId = backStackEntry.arguments?.getInt("teacherId") ?: -1
-            TeacherHomeScreen(teacherId)
+            TeacherHomeScreen(teacherId,
+                onNavigateToCourseList = {navController.navigate(Routes.COURSE_LIST)},
+                onNavigateToStudentList = {navController.navigate(Routes.STUDENT_LIST)}
+                )
         }
     }
 }

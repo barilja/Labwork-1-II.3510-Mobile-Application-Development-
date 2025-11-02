@@ -1,10 +1,13 @@
 package com.tumme.scrudstudents.ui.teacher
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,40 +24,55 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tumme.scrudstudents.data.local.model.TeacherEntity
-import com.tumme.scrudstudents.ui.teacher.TeacherViewModel
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TeacherHomeScreen(
     teacherId: Int,
-    // Injects the ViewModel to fetch course data.
-    viewModel: TeacherViewModel = hiltViewModel()
-    // A lambda to be called to navigate back to the previous screen.
+    viewModel: TeacherViewModel = hiltViewModel(),
+    onNavigateToCourseList:()->Unit={},
+    onNavigateToStudentList:()->Unit={}
 ) {
-    // A mutable state to hold the fetched TeacherEntity. It's nullable and starts as null.
     var teacher by remember { mutableStateOf<TeacherEntity?>(null) }
 
-    // A side-effect that runs once when the `courseId` changes.
-    // It launches a coroutine to fetch the course details from the ViewModel.
     LaunchedEffect(teacherId) {
-        // Calls the suspend function on the ViewModel to find the courses by their ID and updates the state.
         teacher = viewModel.findTeacher(teacherId)
     }
-    Scaffold(topBar = {
-        TopAppBar(title = { Text("Teacher home page") })
-    }) { padding ->
-        Column(modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp)) {
-            // Checks if the course data is still being loaded.
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Teacher Home Page") },
+            )
+        }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(16.dp)
+        ) {
             if (teacher == null) {
-                // Shows a simple loading text while fetching data.
                 Text("Loading...")
             } else {
-                // Once the student data is loaded, display the details.
                 Text("ID: ${teacher!!.idTeacher}")
-                Text("Name: ${teacher!!.firstName}+${teacher!!.lastName}")
-                Text("ECTS: ${teacher!!.dateOfBirth}")
-                Text("Level: ${teacher!!.email}")
+                Text("Name: ${teacher!!.firstName} ${teacher!!.lastName}")
+                Text("Date of Birth: ${teacher!!.dateOfBirth}")
+                Text("Email: ${teacher!!.email}")
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // ✅ Button to navigate to Course List
+                Button(onClick = { onNavigateToCourseList() }) {
+                    Text("Go to Course List")
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // ✅ Button to navigate to Student List
+                Button(onClick = { onNavigateToStudentList()}) {
+                    Text("Go to Student List")
+                }
             }
         }
     }
