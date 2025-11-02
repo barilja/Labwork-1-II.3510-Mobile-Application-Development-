@@ -5,9 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,7 +13,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tumme.scrudstudents.data.local.model.TeachEntity
 import com.tumme.scrudstudents.data.local.model.CourseEntity
-import com.tumme.scrudstudents.data.local.model.TeacherEntity
 
 @Composable
 fun TeachRow(
@@ -28,12 +24,10 @@ fun TeachRow(
 
     // Local states for course and student names
     var course by remember { mutableStateOf<CourseEntity?>(null) }
-    var teacher by remember { mutableStateOf<TeacherEntity?>(null) }
 
     // Fetch data asynchronously when the subscribe changes
     LaunchedEffect(teach) {
         course = viewModel.getCourseById(teach.courseId)
-        teacher = viewModel.getTeacherById(teach.teacherId)
     }
 
     Row(
@@ -44,11 +38,19 @@ fun TeachRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = course?.nameCourse ?: "Loading...",
+            text = course?.idCourse.toString() ?: "Loading...",
             modifier = Modifier.width(100.dp)
         )
         Text(
-            text = teacher?.lastName ?: "Loading...",
+            text = course?.nameCourse ?: "Loading...",
+            modifier = Modifier.width(150.dp)
+        )
+        Text(
+            text = course?.ectsCourse.toString() ?: "Loading...",
+            modifier = Modifier.width(150.dp)
+        )
+        Text(
+            text = course?.levelCourse.toString() ?: "Loading...",
             modifier = Modifier.width(150.dp)
         )
         Row(

@@ -25,6 +25,9 @@ import com.tumme.scrudstudents.ui.authentication.RegisterScreen
 import com.tumme.scrudstudents.ui.teacher.TeacherHomeScreen
 //teacher ui import
 import com.tumme.scrudstudents.ui.teacher.TeacherHomeScreen
+//teach ui import
+import com.tumme.scrudstudents.ui.teaches.TeachListScreen
+import com.tumme.scrudstudents.ui.teaches.TeachFormScreen
 
 
 object Routes {
@@ -47,6 +50,9 @@ object Routes {
     const val REGISTER = "register"
     //teacher routes
     const val TEACHER_HOME= "teacher_home/{teacherId}"
+    //teach routes
+    const val TEACH_LIST="teach_list/{teacherId}"
+    const val TEACH_FORM="teach_form/{teacherId}"
 }
 
 @Composable
@@ -153,9 +159,31 @@ fun AppNavHost() {
         ) { backStackEntry ->
             val teacherId = backStackEntry.arguments?.getInt("teacherId") ?: -1
             TeacherHomeScreen(teacherId,
-                onNavigateToCourseList = {navController.navigate(Routes.COURSE_LIST)},
+                onNavigateToCourseList = {teacherId->navController.navigate("teach_list/$teacherId")},
                 onNavigateToStudentList = {navController.navigate(Routes.STUDENT_LIST)}
                 )
+        }
+        composable(
+            route="teach_list/{teacherId}",
+            arguments= listOf(navArgument("teacherId"){type=NavType.IntType})
+        ){
+            backStackEntry ->
+            val teacherId=backStackEntry.arguments?.getInt("teacherId") ?: -1
+            TeachListScreen(
+                teacherId,
+                onNavigateToForm = {teacherId->navController.navigate("teach_form/$teacherId")}
+            )
+        }
+        composable(
+            route="teach_form/{teacherId}",
+            arguments= listOf(navArgument("teacherId"){type=NavType.IntType})
+        ){
+                backStackEntry ->
+            val teacherId=backStackEntry.arguments?.getInt("teacherId") ?: -1
+            TeachFormScreen(
+                teacherId,
+                onSaved = {navController.navigate("teach_list/$teacherId")}
+            )
         }
     }
 }

@@ -1,20 +1,14 @@
 package com.tumme.scrudstudents.ui.teaches
 
-import androidx.compose.foundation.horizontalScroll
 import com.tumme.scrudstudents.ui.components.TableHeader
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Book
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.People
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.tumme.scrudstudents.ui.course.CourseRow
 import androidx.hilt.navigation.compose.hiltViewModel
 
 // Opt-in to use experimental Material 3 APIs.
@@ -22,10 +16,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 // Defines a Composable function, which is the basic building block of a UI in Compose.
 @Composable
 fun TeachListScreen(
+    teacherId:Int,
     // Injects the CourseViewModel using Hilt for data operations.
     viewModel: TeachViewModel = hiltViewModel(),
     // A lambda function to handle navigation to the course creation form.
-    onNavigateToForm: () -> Unit = {}
+    onNavigateToForm: (Int) -> Unit = {}
 ) {
     // Collects the list of courses from the ViewModel as a State object. The UI will recompose when this state changes.
     val teaches by viewModel.teaches.collectAsState()
@@ -39,7 +34,7 @@ fun TeachListScreen(
         },
         floatingActionButton = {
             // A button for creating a new course, which triggers the onNavigateToForm callback.
-            FloatingActionButton(onClick = onNavigateToForm) {
+            FloatingActionButton(onClick = {onNavigateToForm(teacherId)}) {
                 Text("+")
             }
         },
