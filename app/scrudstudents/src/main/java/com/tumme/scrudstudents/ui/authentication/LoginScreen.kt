@@ -21,8 +21,8 @@ fun LoginScreen(
     onNavigateToRegister: () -> Unit = {}
 ) {
     var role by remember { mutableStateOf("Student") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("test@gmail.com") }
+    var password by remember { mutableStateOf("test") }
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
     val coroutineScope = rememberCoroutineScope()

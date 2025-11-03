@@ -9,6 +9,7 @@ import androidx.navigation.navArgument
 import com.tumme.scrudstudents.ui.student.StudentListScreen
 import com.tumme.scrudstudents.ui.student.StudentFormScreen
 import com.tumme.scrudstudents.ui.student.StudentDetailScreen
+import com.tumme.scrudstudents.ui.student.StudentHomeScreen
 //course ui imports
 import com.tumme.scrudstudents.ui.course.CourseDetailScreen
 import com.tumme.scrudstudents.ui.course.CourseListScreen
@@ -35,14 +36,15 @@ object Routes {
     const val STUDENT_LIST = "student_list"
     const val STUDENT_FORM = "student_form"
     const val STUDENT_DETAIL = "student_detail/{studentId}"
+    const val STUDENT_HOME="student_home/{studentId}"
     //course routes
     const val COURSE_LIST = "course_list"
     const val COURSE_EDIT = "course_edit/{courseId}"
     const val COURSE_FORM = "course_form"
     const val COURSE_DETAIL = "course_detail/{courseId}"
     //subscribe routes
-    const val SUBSCRIBE_FORM = "subscribe_form"
-    const val SUBSCRIBE_LIST = "subscribe_list"
+    const val SUBSCRIBE_FORM = "subscribe_form/{studentId}"
+    const val SUBSCRIBE_LIST = "subscribe_list/{studentId}"
     const val SUBSCRIBE_DETAIL= "subscribe_detail/{courseId}/{studentId}/{score}"
     const val SUBSCRIBE_EDIT= "subscribe_edit/{courseId}/{studentId}/{score}"
     //authentication routes
@@ -93,20 +95,6 @@ fun AppNavHost() {
                 onSaved = { navController.popBackStack() }
             )
         }
-        composable(Routes.SUBSCRIBE_LIST) {
-            SubscribeListScreen( //different routes reachable from this screen
-                onNavigateToEdit = {courseId,studentId,score->navController.navigate("subscribe_edit/$courseId/$studentId/$score")},
-                onNavigateToForm = { navController.navigate(Routes.SUBSCRIBE_FORM) },
-                onNavigateToDetail = { courseId,studentId,score -> navController.navigate("subscribe_detail/$courseId/$studentId/$score") },
-                onNavigateToCourses= {navController.navigate(Routes.COURSE_LIST)},
-                onNavigateToStudents= {navController.navigate(Routes.STUDENT_LIST)}
-            )
-        }
-        composable(Routes.SUBSCRIBE_FORM) {
-            SubscribeFormScreen( //goes back to the subscribe list screen
-                onSaved = { navController.popBackStack() }
-            )
-        }
         composable( //how the navigation passes the useful parameters to the addressed next screen
             route = "course_detail/{courseId}",
             arguments = listOf(navArgument("courseId") { type = NavType.IntType })
@@ -142,7 +130,7 @@ fun AppNavHost() {
                 if(role=="Teacher"){
                     navController.navigate("teacher_home/$id")
                 }else{
-                    navController.navigate(Routes.STUDENT_LIST)
+                    navController.navigate("student_home/$id")
                 }
             }
         )
@@ -171,7 +159,8 @@ fun AppNavHost() {
             val teacherId=backStackEntry.arguments?.getInt("teacherId") ?: -1
             TeachListScreen(
                 teacherId,
-                onNavigateToForm = {teacherId->navController.navigate("teach_form/$teacherId")}
+                onNavigateToForm = {teacherId->navController.navigate("teach_form/$teacherId")},
+                onNavigateBack = {navController.navigate("teacher_home/$teacherId")}
             )
         }
         composable(
@@ -183,6 +172,39 @@ fun AppNavHost() {
             TeachFormScreen(
                 teacherId,
                 onSaved = {navController.navigate("teach_list/$teacherId")}
+            )
+        }
+        composable(
+            route = "student_home/{studentId}",
+            arguments = listOf(navArgument("studentId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val studentId = backStackEntry.arguments?.getInt("studentId") ?: -1
+            StudentHomeScreen(studentId,
+                onNavigateToCourseList = {studentId->navController.navigate("subscribe_list/$studentId")},
+                onNavigateToStudentList = {navController.navigate(Routes.STUDENT_LIST)}
+            )
+        }
+        composable(
+            route="subscribe_list/{studentId}",
+            arguments= listOf(navArgument("studentId"){type=NavType.IntType})
+        ){
+                backStackEntry ->
+            val studentId=backStackEntry.arguments?.getInt("studentId") ?: -1
+            SubscribeListScreen(
+                studentId,
+                onNavigateToForm = {studentId->navController.navigate("subscribe_form/$studentId")},
+                onNavigateBack = {navController.navigate("student_home/$studentId")}
+            )
+        }
+        composable(
+            route="subscribe_form/{studentId}",
+            arguments= listOf(navArgument("studentId"){type=NavType.IntType})
+        ){
+                backStackEntry ->
+            val studentId=backStackEntry.arguments?.getInt("studentId") ?: -1
+            SubscribeFormScreen(
+                studentId,
+                onSaved = {navController.navigate("subscribe_list/$studentId")}
             )
         }
     }

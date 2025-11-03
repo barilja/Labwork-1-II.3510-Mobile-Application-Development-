@@ -74,7 +74,7 @@ fun TeachFormScreen(
                 onSaved()
             }
         }) {
-            Text("Save Subscription")
+            Text("Save Teach")
         }
     }
 }
