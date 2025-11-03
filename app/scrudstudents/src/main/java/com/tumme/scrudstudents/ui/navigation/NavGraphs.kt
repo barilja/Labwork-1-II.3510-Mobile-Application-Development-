@@ -26,6 +26,7 @@ import com.tumme.scrudstudents.ui.authentication.RegisterScreen
 import com.tumme.scrudstudents.ui.teacher.TeacherHomeScreen
 //teacher ui import
 import com.tumme.scrudstudents.ui.teacher.TeacherHomeScreen
+import com.tumme.scrudstudents.ui.teacher.TeacherStudentList
 //teach ui import
 import com.tumme.scrudstudents.ui.teaches.TeachListScreen
 import com.tumme.scrudstudents.ui.teaches.TeachFormScreen
@@ -52,6 +53,7 @@ object Routes {
     const val REGISTER = "register"
     //teacher routes
     const val TEACHER_HOME= "teacher_home/{teacherId}"
+    const val TEACHER_STUDENTS="teacher_students/{teacherId}"
     //teach routes
     const val TEACH_LIST="teach_list/{teacherId}"
     const val TEACH_FORM="teach_form/{teacherId}"
@@ -148,7 +150,8 @@ fun AppNavHost() {
             val teacherId = backStackEntry.arguments?.getInt("teacherId") ?: -1
             TeacherHomeScreen(teacherId,
                 onNavigateToCourseList = {teacherId->navController.navigate("teach_list/$teacherId")},
-                onNavigateToStudentList = {navController.navigate(Routes.STUDENT_LIST)}
+                onNavigateToStudentList = {navController.navigate("teacher_students/$teacherId")},
+                onLogout={navController.navigate(Routes.LOGIN)}
                 )
         }
         composable(
@@ -181,7 +184,8 @@ fun AppNavHost() {
             val studentId = backStackEntry.arguments?.getInt("studentId") ?: -1
             StudentHomeScreen(studentId,
                 onNavigateToCourseList = {studentId->navController.navigate("subscribe_list/$studentId")},
-                onNavigateToStudentList = {navController.navigate(Routes.STUDENT_LIST)}
+                onNavigateToStudentList = {navController.navigate(Routes.STUDENT_LIST)},
+                onLogout = {navController.navigate(Routes.LOGIN)}
             )
         }
         composable(
@@ -205,6 +209,17 @@ fun AppNavHost() {
             SubscribeFormScreen(
                 studentId,
                 onSaved = {navController.navigate("subscribe_list/$studentId")}
+            )
+        }
+        composable(
+            route="teacher_students/{teacherId}",
+            arguments= listOf(navArgument("teacherId"){type=NavType.IntType})
+        ){
+                backStackEntry ->
+            val teacherId=backStackEntry.arguments?.getInt("teacherId") ?: -1
+            TeacherStudentList(
+                teacherId,
+                onNavigateBack = {navController.navigate("teacher_home/$teacherId")}
             )
         }
     }

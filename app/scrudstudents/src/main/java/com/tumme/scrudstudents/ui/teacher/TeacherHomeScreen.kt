@@ -20,6 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tumme.scrudstudents.data.local.model.TeacherEntity
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,8 +29,10 @@ fun TeacherHomeScreen(
     teacherId: Int,
     viewModel: TeacherViewModel = hiltViewModel(),
     onNavigateToCourseList:(Int)->Unit={_->},
-    onNavigateToStudentList:()->Unit={}
+    onNavigateToStudentList:()->Unit={},
+    onLogout:()->Unit={}
 ) {
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     var teacher by remember { mutableStateOf<TeacherEntity?>(null) }
 
     LaunchedEffect(teacherId) {
@@ -53,7 +57,7 @@ fun TeacherHomeScreen(
             } else {
                 Text("ID: ${teacher!!.idTeacher}")
                 Text("Name: ${teacher!!.firstName} ${teacher!!.lastName}")
-                Text("Date of Birth: ${teacher!!.dateOfBirth}")
+                Text("Date of Birth: ${teacher!!.dateOfBirth.let { dateFormat.format(it) }}")
                 Text("Email: ${teacher!!.email}")
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -66,6 +70,12 @@ fun TeacherHomeScreen(
 
                 Button(onClick = { onNavigateToStudentList()}) {
                     Text("Go to Student List")
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Button(onClick = { onLogout()}) {
+                    Text("Logout")
                 }
             }
         }

@@ -24,6 +24,9 @@ fun SubscribeListScreen(
     val subscribes by viewModel.subscribes.collectAsState()
     val scrollState = rememberScrollState()
 
+    // ✅ Filter subscriptions only for this student
+    val studentSubscribes = subscribes.filter { it.studentId == studentId }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -51,18 +54,22 @@ fun SubscribeListScreen(
                 .padding(16.dp)
         ) {
             TableHeader(
-                cells = listOf("ID", "Course Name", "ECTS", "Level"),
-                weights = listOf(0.2f, 0.7f, 0.3f, 0.3f)
+                cells = listOf("Course ID", "Score"),
+                weights = listOf(0.5f, 0.5f)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(subscribes) { subscribe ->
-                    SubscribeRow(
-                        subscribe = subscribe,
-                        onDelete = { viewModel.deleteSubscription(subscribe) }
-                    )
+            if (studentSubscribes.isEmpty()) {
+                Text("You are not subscribed to any courses yet.")
+            } else {
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    items(studentSubscribes) { subscribe ->
+                        SubscribeRow(
+                            subscribe = subscribe,
+                            onDelete = { viewModel.deleteSubscription(subscribe) }
+                        )
+                    }
                 }
             }
         }
