@@ -14,23 +14,22 @@ import com.tumme.scrudstudents.data.local.model.SubscribeEntity
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubscribeFormScreen(
-    studentId:Int,
-    viewModel: SubscribeViewModel = hiltViewModel(),
-    onSaved: () -> Unit = {}
+    studentId:Int, // Passed from navigation — UI knows which student is subscribing
+    viewModel: SubscribeViewModel = hiltViewModel(), // ViewModel injected via Hilt (MVVM dependency injection)
+    onSaved: () -> Unit = {} // Callback to navigate back or refresh list after saving
 ) {
-    // Collect the lists of courses and students from the ViewModel.
+    // ViewModel exposes list of courses as a StateFlow → collected here to update UI automatically
     val courses by viewModel.courses.collectAsState()
-    val context = LocalContext.current
 
-    // State for managing whether the dropdown menus are expanded or not.
+    val context = LocalContext.current // Only needed for showing Toast (UI concern)
+
+    // State variables for the dropdown UI (not ViewModel, because these are temporary UI states)
     var courseMenuExpanded by remember { mutableStateOf(false) }
-
-    // State to hold the currently selected course and student from the dropdowns.
     var selectedCourse by remember { mutableStateOf<CourseEntity?>(null) }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
 
-        // Course Selection Dropdown
+        // UI dropdown for selecting a Course — UI reads ViewModel state but does NOT modify DB directly
         ExposedDropdownMenuBox(
             expanded = courseMenuExpanded,
             onExpandedChange = { courseMenuExpanded = !courseMenuExpanded }
@@ -38,7 +37,7 @@ fun SubscribeFormScreen(
             TextField(
                 value = selectedCourse?.nameCourse ?: "",
                 onValueChange = {},
-                readOnly = true,
+                readOnly = true, // UI is selection-driven, manual typing is disabled
                 label = { Text("Select Course") },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = courseMenuExpanded) },
                 modifier = Modifier.menuAnchor().fillMaxWidth()
@@ -47,11 +46,12 @@ fun SubscribeFormScreen(
                 expanded = courseMenuExpanded,
                 onDismissRequest = { courseMenuExpanded = false }
             ) {
+                // UI builds dropdown options from ViewModel-provided courses list
                 courses.forEach { course ->
                     DropdownMenuItem(
                         text = { Text(course.nameCourse) },
                         onClick = {
-                            selectedCourse = course
+                            selectedCourse = course // UI state update only
                             courseMenuExpanded = false
                         }
                     )
@@ -61,17 +61,22 @@ fun SubscribeFormScreen(
 
         Spacer(Modifier.height(16.dp))
 
-        // Save Button
+        // When saving, UI triggers ViewModel action → ViewModel calls Repository → Repository updates DB
         Button(onClick = {
             if (selectedCourse == null) {
                 Toast.makeText(context, "Please select a course.", Toast.LENGTH_SHORT).show()
             } else {
+                // UI prepares entity object (model layer object)
                 val subscribe = SubscribeEntity(
                     studentId = studentId,
                     courseId = selectedCourse!!.idCourse,
-                    score = 0.toFloat()
+                    score = 0.toFloat() // Default initial value
                 )
+
+                // MVVM core: UI → ViewModel → Repository → Local DB (Room)
                 viewModel.insertSubscription(subscribe)
+
+                // Notify caller (Screen) to navigate back or refresh
                 onSaved()
             }
         }) {

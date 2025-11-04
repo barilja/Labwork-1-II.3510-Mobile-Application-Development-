@@ -30,6 +30,7 @@ fun TeacherHomeScreen(
     viewModel: TeacherViewModel = hiltViewModel(),
     onNavigateToCourseList:(Int)->Unit={_->},
     onNavigateToStudentList:()->Unit={},
+    onNavigateToMarkScreen:()->Unit={},
     onLogout:()->Unit={}
 ) {
     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -70,6 +71,12 @@ fun TeacherHomeScreen(
 
                 Button(onClick = { onNavigateToStudentList()}) {
                     Text("Go to Student List")
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Button(onClick = { onNavigateToMarkScreen()}) {
+                    Text("Go to mark screen")
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))

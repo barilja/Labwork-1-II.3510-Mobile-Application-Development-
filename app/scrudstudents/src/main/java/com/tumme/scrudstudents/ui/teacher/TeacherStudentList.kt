@@ -16,30 +16,32 @@ import com.tumme.scrudstudents.ui.components.TableHeader
 import com.tumme.scrudstudents.ui.teaches.TeachViewModel
 import com.tumme.scrudstudents.ui.subscribe.SubscribeViewModel
 import com.tumme.scrudstudents.ui.student.StudentListViewModel
-import com.tumme.scrudstudents.ui.course.CourseViewModel  // 👈 to get course names
+import com.tumme.scrudstudents.ui.course.CourseViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TeacherStudentList(
     teacherId: Int,
+    // ViewModels are injected using Hilt so UI does not instantiate them manually
     teachViewModel: TeachViewModel = hiltViewModel(),
     subscribeViewModel: SubscribeViewModel = hiltViewModel(),
     studentViewModel: StudentListViewModel = hiltViewModel(),
-    courseViewModel: CourseViewModel = hiltViewModel(), // 👈 added
+    courseViewModel: CourseViewModel = hiltViewModel(),
     onNavigateBack: () -> Unit = {}
 ) {
+    // UI collects data from StateFlows exposed by ViewModels
     val teaches by teachViewModel.teaches.collectAsState()
     val subscribes by subscribeViewModel.subscribes.collectAsState()
     val students by studentViewModel.students.collectAsState()
     val courses by courseViewModel.courses.collectAsState()
 
-    // 🧠 1. Filter courses taught by this teacher
+    // Filter only the courses taught by this teacher (logic stays in UI because it is derived data)
     val teacherCourseIds = teaches.filter { it.teacherId == teacherId }.map { it.courseId }
 
-    // 🧩 2. Filter subscriptions to those courses
+    // Filter subscriptions only related to those courses
     val subscribedStudents = subscribes.filter { it.courseId in teacherCourseIds }
 
-    // 🧍 3. Join subscription + student + course info
+    // Join student + course + subscription data to display a combined row in UI
     val studentCourseDetails = subscribedStudents.mapNotNull { sub ->
         val student = students.find { it.idStudent == sub.studentId }
         val course = courses.find { it.idCourse == sub.courseId }
@@ -80,6 +82,7 @@ fun TeacherStudentList(
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // UI displays result from composed, joined state, without querying repository directly
             if (studentCourseDetails.isEmpty()) {
                 Text("No students enrolled in your courses.")
             } else {
@@ -89,7 +92,7 @@ fun TeacherStudentList(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 8.dp)
-                                .horizontalScroll(scrollState) // 👈 enable horizontal scrolling
+                                .horizontalScroll(scrollState)
                         ) {
                             Text(item.studentId.toString(), modifier = Modifier.weight(0.2f))
                             Text(item.fullName, modifier = Modifier.weight(0.4f))
@@ -103,6 +106,8 @@ fun TeacherStudentList(
     }
 }
 
+// Simple UI model used to present combined data to the Composable.
+// This prevents Composable from needing raw DB entities or business objects.
 data class StudentCourseItem(
     val studentId: Int,
     val fullName: String,

@@ -16,16 +16,17 @@ import com.tumme.scrudstudents.data.local.model.CourseEntity
 
 @Composable
 fun TeachRow(
-    teach: TeachEntity,
-    onDelete: () -> Unit,
-    viewModel: TeachViewModel = hiltViewModel()
+    teach: TeachEntity,            // Represents the Teach entity being displayed
+    onDelete: () -> Unit,         // Callback to request deletion (UI does not delete directly)
+    viewModel: TeachViewModel = hiltViewModel() // ViewModel provided via Hilt
 ) {
     val scrollState = rememberScrollState()
 
-    // Local states for course and student names
+    // UI state to store the fetched Course: Compose will recompose when this changes
     var course by remember { mutableStateOf<CourseEntity?>(null) }
 
-    // Fetch data asynchronously when the subscribe changes
+    // Side-effect: fetch the course when this TeachRow is shown or when 'teach' changes
+    // This respects MVVM: the UI requests data, but the ViewModel retrieves it.
     LaunchedEffect(teach) {
         course = viewModel.getCourseById(teach.courseId)
     }
@@ -37,6 +38,8 @@ fun TeachRow(
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        // Display fetched course information.
+        // If still loading, fallback strings avoid UI crashes.
         Text(
             text = course?.idCourse.toString() ?: "Loading...",
             modifier = Modifier.width(100.dp)
@@ -53,11 +56,15 @@ fun TeachRow(
             text = course?.levelCourse.toString() ?: "Loading...",
             modifier = Modifier.width(150.dp)
         )
+
+        // UI triggers deletion via callback; ViewModel handles logic and data source
         Row(
             modifier = Modifier.width(200.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            IconButton(onClick = onDelete) { Icon(Icons.Default.Delete, contentDescription = "Delete") }
+            IconButton(onClick = onDelete) {
+                Icon(Icons.Default.Delete, contentDescription = "Delete")
+            }
         }
     }
 

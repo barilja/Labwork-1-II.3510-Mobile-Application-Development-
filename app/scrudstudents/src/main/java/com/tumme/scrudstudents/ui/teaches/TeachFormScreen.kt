@@ -14,23 +14,22 @@ import com.tumme.scrudstudents.data.local.model.TeachEntity
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TeachFormScreen(
-    teacherId:Int,
-    viewModel: TeachViewModel = hiltViewModel(),
-    onSaved: () -> Unit = {}
+    teacherId: Int,
+    viewModel: TeachViewModel = hiltViewModel(),   // ViewModel obtained from Hilt for state + business logic
+    onSaved: () -> Unit = {}                      // Callback triggered when saving is completed
 ) {
-    // Collect the lists of courses and students from the ViewModel.
+    // UI observes the list of courses from ViewModel (StateFlow -> Compose state)
     val courses by viewModel.courses.collectAsState()
+
     val context = LocalContext.current
 
-    // State for managing whether the dropdown menus are expanded or not.
+    // UI states - kept locally because they only affect UI interaction, not shared data
     var courseMenuExpanded by remember { mutableStateOf(false) }
-
-    // State to hold the currently selected course and student from the dropdowns.
     var selectedCourse by remember { mutableStateOf<CourseEntity?>(null) }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
 
-        // Course Selection Dropdown
+        // Dropdown displays available courses fetched from Repository via ViewModel
         ExposedDropdownMenuBox(
             expanded = courseMenuExpanded,
             onExpandedChange = { courseMenuExpanded = !courseMenuExpanded }
@@ -51,7 +50,7 @@ fun TeachFormScreen(
                     DropdownMenuItem(
                         text = { Text(course.nameCourse) },
                         onClick = {
-                            selectedCourse = course
+                            selectedCourse = course       // UI remembers user's selection
                             courseMenuExpanded = false
                         }
                     )
@@ -61,16 +60,21 @@ fun TeachFormScreen(
 
         Spacer(Modifier.height(16.dp))
 
-        // Save Button
+        // Save action triggers ViewModel -> Repository -> Database write operation
         Button(onClick = {
             if (selectedCourse == null) {
                 Toast.makeText(context, "Please select a course.", Toast.LENGTH_SHORT).show()
             } else {
+                // Entity prepared based on UI selections
                 val teach = TeachEntity(
                     teacherId = teacherId,
                     courseId = selectedCourse!!.idCourse,
                 )
+
+                // ViewModel performs insertion (UI does not speak to DB directly)
                 viewModel.insertTeach(teach)
+
+                // Notifies navigation layer to go back / close form
                 onSaved()
             }
         }) {

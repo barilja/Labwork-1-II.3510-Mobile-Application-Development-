@@ -125,6 +125,7 @@ fun AppNavHost() {
             val score = backStackEntry.arguments?.getString("score")?.toFloat()
             SubscribeEditScreen(courseId = courseId!!, studentId = studentId!!, score = score!!, onSave = { navController.popBackStack() })
         }
+        //auth screens with role selector to decide the next landing screen
         composable(Routes.LOGIN) {
         LoginScreen(
             onNavigateToRegister = {navController.navigate(Routes.REGISTER)},
@@ -137,12 +138,14 @@ fun AppNavHost() {
             }
         )
         }
+        //auth screen that allows the go back to login page
         composable(Routes.REGISTER) {
             RegisterScreen(
                 onNavigateToRegister = {navController.navigate(Routes.LOGIN)},
                 onRegistered = {navController.navigate(Routes.LOGIN)}
             )
         }
+        //teacher home screen with different jump routes
         composable(
             route = "teacher_home/{teacherId}",
             arguments = listOf(navArgument("teacherId") { type = NavType.IntType })
@@ -154,6 +157,7 @@ fun AppNavHost() {
                 onLogout={navController.navigate(Routes.LOGIN)}
                 )
         }
+        //teacher courses screen
         composable(
             route="teach_list/{teacherId}",
             arguments= listOf(navArgument("teacherId"){type=NavType.IntType})
@@ -166,6 +170,7 @@ fun AppNavHost() {
                 onNavigateBack = {navController.navigate("teacher_home/$teacherId")}
             )
         }
+        //teacher new course screen
         composable(
             route="teach_form/{teacherId}",
             arguments= listOf(navArgument("teacherId"){type=NavType.IntType})
@@ -177,6 +182,7 @@ fun AppNavHost() {
                 onSaved = {navController.navigate("teach_list/$teacherId")}
             )
         }
+        //student home screen
         composable(
             route = "student_home/{studentId}",
             arguments = listOf(navArgument("studentId") { type = NavType.IntType })
@@ -188,6 +194,7 @@ fun AppNavHost() {
                 onLogout = {navController.navigate(Routes.LOGIN)}
             )
         }
+        //student courses screen
         composable(
             route="subscribe_list/{studentId}",
             arguments= listOf(navArgument("studentId"){type=NavType.IntType})
@@ -200,6 +207,7 @@ fun AppNavHost() {
                 onNavigateBack = {navController.navigate("student_home/$studentId")}
             )
         }
+        //student new course screen
         composable(
             route="subscribe_form/{studentId}",
             arguments= listOf(navArgument("studentId"){type=NavType.IntType})
@@ -211,6 +219,7 @@ fun AppNavHost() {
                 onSaved = {navController.navigate("subscribe_list/$studentId")}
             )
         }
+        //teacher student list screen
         composable(
             route="teacher_students/{teacherId}",
             arguments= listOf(navArgument("teacherId"){type=NavType.IntType})

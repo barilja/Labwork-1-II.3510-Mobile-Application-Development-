@@ -17,14 +17,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @Composable
 fun SubscribeListScreen(
     studentId: Int,
-    viewModel: SubscribeViewModel = hiltViewModel(),
-    onNavigateToForm: (Int) -> Unit = {},
-    onNavigateBack: () -> Unit = {}
+    viewModel: SubscribeViewModel = hiltViewModel(), // ViewModel injected via Hilt (MVVM dependency injection)
+    onNavigateToForm: (Int) -> Unit = {}, // Navigation callback to open form screen (View/UI layer doesn't handle logic)
+    onNavigateBack: () -> Unit = {} // Callback for navigation up
 ) {
+    // Collects real-time state from ViewModel's Flow → triggers UI recomposition
     val subscribes by viewModel.subscribes.collectAsState()
-    val scrollState = rememberScrollState()
 
-    // ✅ Filter subscriptions only for this student
+    val scrollState = rememberScrollState() // UI scrolling, not MVVM logic
+
+    // UI filters list locally — ViewModel provides all subscribes; View decides how to display for this student
     val studentSubscribes = subscribes.filter { it.studentId == studentId }
 
     Scaffold(
@@ -32,7 +34,7 @@ fun SubscribeListScreen(
             TopAppBar(
                 title = { Text("Your Courses") },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
+                    IconButton(onClick = onNavigateBack) { // Delegates navigation to NavHost controller
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = "Back to Home"
@@ -43,7 +45,7 @@ fun SubscribeListScreen(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = { onNavigateToForm(studentId) }) {
-                Text("+")
+                Text("+") // UI only triggers navigation to form, not DB logic
             }
         },
     ) { padding ->
@@ -53,6 +55,8 @@ fun SubscribeListScreen(
                 .padding(padding)
                 .padding(16.dp)
         ) {
+
+            // Table header (pure UI component)
             TableHeader(
                 cells = listOf("Course ID", "Score"),
                 weights = listOf(0.5f, 0.5f)
@@ -61,13 +65,18 @@ fun SubscribeListScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             if (studentSubscribes.isEmpty()) {
+                // UI reaction to state result from ViewModel
                 Text("You are not subscribed to any courses yet.")
             } else {
+                // UI list renderer
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     items(studentSubscribes) { subscribe ->
+
+                        // Child row that displays one subscription
+                        // ViewModel delete function triggered via callback → UI does not modify DB directly
                         SubscribeRow(
                             subscribe = subscribe,
-                            onDelete = { viewModel.deleteSubscription(subscribe) }
+                            onDelete = { viewModel.deleteSubscription(subscribe) } // MVVM: UI → ViewModel → Repository → DB
                         )
                     }
                 }
