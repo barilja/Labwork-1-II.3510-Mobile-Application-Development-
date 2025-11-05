@@ -27,58 +27,65 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StudentHomeScreen(
-    studentId: Int,
-    viewModel: StudentListViewModel = hiltViewModel(),
-    onNavigateToCourseList:(Int)->Unit={_->},
-    onNavigateToStudentList:()->Unit={},
-    onLogout:()->Unit={}
+    studentId: Int, // ID of the student passed from navigation
+    viewModel: StudentListViewModel = hiltViewModel(), // Injected ViewModel via Hilt (MVVM pattern)
+    onNavigateToCourseList: (Int) -> Unit = { _ -> }, // Callback to navigate to the student's course list
+    onNavigateToFinalGrades: (Int) -> Unit = { _ -> }, // Callback to navigate to final grades screen
+    onLogout: () -> Unit = {} // Callback to log the student out
 ) {
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    var student by remember { mutableStateOf<StudentEntity?>(null) }
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()) // Format date of birth for display
+    var student by remember { mutableStateOf<StudentEntity?>(null) } // Holds current student info
 
+    // Fetch student details when the screen loads or studentId changes
     LaunchedEffect(studentId) {
-        student = viewModel.findStudent(studentId)
+        student = viewModel.findStudent(studentId) // Call ViewModel to get student entity
     }
 
+    // Scaffold provides a basic page structure with top bar and content
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Student Home Page") },
+                title = { Text("Student Home Page") }, // Simple app bar title
             )
         }
     ) { padding ->
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(16.dp)
+                .fillMaxSize() // Column fills entire screen
+                .padding(padding) // Respect Scaffold padding (status bar / navigation bar)
+                .padding(16.dp) // Inner padding for content
         ) {
+            // Show loading text while student data is being fetched
             if (student == null) {
                 Text("Loading...")
             } else {
-                Text("ID: ${student!!.idStudent}")
-                Text("Name: ${student!!.firstName} ${student!!.lastName}")
-                Text("Date of Birth: ${student!!.dateOfBirth.let { dateFormat.format(it) }}")
-                Text("Email: ${student!!.email}")
-                Text("Level: ${student!!.levelCourse}")
+                // Display student information once loaded
+                Text("ID: ${student!!.idStudent}") // Student ID
+                Text("Name: ${student!!.firstName} ${student!!.lastName}") // Full Name
+                Text("Date of Birth: ${student!!.dateOfBirth.let { dateFormat.format(it) }}") // DOB formatted
+                Text("Email: ${student!!.email}") // Email
+                Text("Level: ${student!!.levelCourse}") // Current level/course of the student
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(24.dp)) // Space before buttons
 
+                // Button to navigate to the student's course list
                 Button(onClick = { onNavigateToCourseList(student!!.idStudent) }) {
                     Text("Go to Course List")
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(12.dp)) // Small spacing between buttons
 
-                Button(onClick = { onNavigateToStudentList()}) {
-                    Text("Go to Student List")
+                // Button to navigate to the student's final grades page
+                Button(onClick = { onNavigateToFinalGrades(student!!.idStudent) }) {
+                    Text("Go to Final Grades Page")
                 }
 
-                Spacer(modifier=Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(12.dp)) // Space before logout button
 
-                Button(onClick = { onLogout()}) {
+                // Logout button
+                Button(onClick = { onLogout() }) {
                     Text("Logout")
-                    Alignment.Center
+                    Alignment.Center // Ensures button content is centered
                 }
             }
         }

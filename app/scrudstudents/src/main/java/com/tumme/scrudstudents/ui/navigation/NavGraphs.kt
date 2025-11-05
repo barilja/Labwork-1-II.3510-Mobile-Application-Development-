@@ -9,6 +9,7 @@ import androidx.navigation.navArgument
 import com.tumme.scrudstudents.ui.student.StudentListScreen
 import com.tumme.scrudstudents.ui.student.StudentDetailScreen
 import com.tumme.scrudstudents.ui.student.StudentHomeScreen
+import com.tumme.scrudstudents.ui.student.StudentFinalGradesScreen
 //course ui imports
 import com.tumme.scrudstudents.ui.course.CourseDetailScreen
 import com.tumme.scrudstudents.ui.course.CourseListScreen
@@ -25,6 +26,7 @@ import com.tumme.scrudstudents.ui.authentication.RegisterScreen
 //teacher ui import
 import com.tumme.scrudstudents.ui.teacher.TeacherHomeScreen
 import com.tumme.scrudstudents.ui.teacher.TeacherStudentList
+import com.tumme.scrudstudents.ui.teacher.TeacherMarksScreen
 //teach ui import
 import com.tumme.scrudstudents.ui.teaches.TeachListScreen
 import com.tumme.scrudstudents.ui.teaches.TeachFormScreen
@@ -36,6 +38,7 @@ object Routes {
     const val STUDENT_FORM = "student_form"
     const val STUDENT_DETAIL = "student_detail/{studentId}"
     const val STUDENT_HOME="student_home/{studentId}"
+    const val STUDENT_GRADES="student_grades/{studentId}"
     //course routes
     const val COURSE_LIST = "course_list"
     const val COURSE_EDIT = "course_edit/{courseId}"
@@ -52,6 +55,7 @@ object Routes {
     //teacher routes
     const val TEACHER_HOME= "teacher_home/{teacherId}"
     const val TEACHER_STUDENTS="teacher_students/{teacherId}"
+    const val TEACHER_MARKS="teacher_marks/{teacherId}"
     //teach routes
     const val TEACH_LIST="teach_list/{teacherId}"
     const val TEACH_FORM="teach_form/{teacherId}"
@@ -147,6 +151,7 @@ fun AppNavHost() {
             TeacherHomeScreen(teacherId,
                 onNavigateToCourseList = {teacherId->navController.navigate("teach_list/$teacherId")},
                 onNavigateToStudentList = {navController.navigate("teacher_students/$teacherId")},
+                onNavigateToMarkScreen = {teacherId->navController.navigate("teacher_marks/$teacherId")},
                 onLogout={navController.navigate(Routes.LOGIN)}
                 )
         }
@@ -183,7 +188,7 @@ fun AppNavHost() {
             val studentId = backStackEntry.arguments?.getInt("studentId") ?: -1
             StudentHomeScreen(studentId,
                 onNavigateToCourseList = {studentId->navController.navigate("subscribe_list/$studentId")},
-                onNavigateToStudentList = {navController.navigate(Routes.STUDENT_LIST)},
+                onNavigateToFinalGrades = {studentId->navController.navigate("student_grades/$studentId")},
                 onLogout = {navController.navigate(Routes.LOGIN)}
             )
         }
@@ -197,6 +202,18 @@ fun AppNavHost() {
             SubscribeListScreen(
                 studentId,
                 onNavigateToForm = {studentId->navController.navigate("subscribe_form/$studentId")},
+                onNavigateBack = {navController.navigate("student_home/$studentId")}
+            )
+        }
+        //student final grades screen
+        composable(
+            route="student_grades/{studentId}",
+            arguments= listOf(navArgument("studentId"){type=NavType.IntType})
+        ){
+                backStackEntry ->
+            val studentId=backStackEntry.arguments?.getInt("studentId") ?: -1
+            StudentFinalGradesScreen(
+                studentId,
                 onNavigateBack = {navController.navigate("student_home/$studentId")}
             )
         }
@@ -220,6 +237,18 @@ fun AppNavHost() {
                 backStackEntry ->
             val teacherId=backStackEntry.arguments?.getInt("teacherId") ?: -1
             TeacherStudentList(
+                teacherId,
+                onNavigateBack = {navController.navigate("teacher_home/$teacherId")}
+            )
+        }
+        //teacher marks assignment screen
+        composable(
+            route="teacher_marks/{teacherId}",
+            arguments= listOf(navArgument("teacherId"){type=NavType.IntType})
+        ){
+                backStackEntry ->
+            val teacherId=backStackEntry.arguments?.getInt("teacherId") ?: -1
+            TeacherMarksScreen(
                 teacherId,
                 onNavigateBack = {navController.navigate("teacher_home/$teacherId")}
             )
