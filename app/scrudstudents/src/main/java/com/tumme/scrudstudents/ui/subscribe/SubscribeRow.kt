@@ -50,7 +50,7 @@ fun SubscribeRow(
             modifier = Modifier.width(150.dp)
         )
         Text(
-            text = course?.levelCourse.toString() ?: "Loading...",
+            text = subscribe.score.toString() ?: "Loading...",
             modifier = Modifier.width(150.dp)
         )
         Row(

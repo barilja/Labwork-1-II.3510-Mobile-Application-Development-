@@ -1,5 +1,5 @@
 package com.tumme.scrudstudents.ui.student
-
+/*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -83,3 +83,5 @@ fun StudentFormScreen(
 }
 //in this case the flow of interaction in inverted: it starts from the view model where the user is interacting
 //with the ui, then it calls the view model to update the model layer of the database.
+
+ */

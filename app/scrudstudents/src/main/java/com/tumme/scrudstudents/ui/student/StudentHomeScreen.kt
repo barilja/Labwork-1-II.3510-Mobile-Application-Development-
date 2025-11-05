@@ -60,6 +60,7 @@ fun StudentHomeScreen(
                 Text("Name: ${student!!.firstName} ${student!!.lastName}")
                 Text("Date of Birth: ${student!!.dateOfBirth.let { dateFormat.format(it) }}")
                 Text("Email: ${student!!.email}")
+                Text("Level: ${student!!.levelCourse}")
 
                 Spacer(modifier = Modifier.height(24.dp))
 

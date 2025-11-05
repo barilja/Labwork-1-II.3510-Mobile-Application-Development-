@@ -1,5 +1,6 @@
 package com.tumme.scrudstudents.ui.authentication
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -10,12 +11,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tumme.scrudstudents.data.local.model.Gender
+import com.tumme.scrudstudents.data.local.model.LevelCourse
 import com.tumme.scrudstudents.data.local.model.StudentEntity
 import com.tumme.scrudstudents.data.local.model.TeacherEntity
 import com.tumme.scrudstudents.ui.student.StudentListViewModel
 import com.tumme.scrudstudents.ui.teacher.TeacherViewModel
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.compose.foundation.rememberScrollState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,6 +36,8 @@ fun RegisterScreen(
     var dateOfBirthText by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var level by remember { mutableStateOf(LevelCourse.MS) }
+    var scrollState=rememberScrollState()
 
     // Student-specific
     var gender by remember { mutableStateOf(Gender.Male) }
@@ -121,6 +126,25 @@ fun RegisterScreen(
                         }
                     }
                 }
+                Row(modifier = Modifier.horizontalScroll(scrollState)) {
+                    // Iterates through all available LevelCourse options to create a button for each.
+                    LevelCourse.entries.forEach { courseLevel ->
+                        // A button that, when clicked, updates the 'level' state to the selected course level.
+                        Button(
+                            onClick = { level = courseLevel },
+                            modifier = Modifier.padding(end = 8.dp),
+                            // Changes the button's color to indicate whether it is the currently selected level.
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if (level == courseLevel)
+                                    MaterialTheme.colorScheme.primaryContainer
+                                else
+                                    MaterialTheme.colorScheme.secondaryContainer
+                            )
+                        ) {
+                            Text(courseLevel.name)
+                        }
+                    }
+                }
             }
 
             Spacer(Modifier.height(16.dp))
@@ -152,7 +176,8 @@ fun RegisterScreen(
                             dateOfBirth = parsedDate,
                             gender = gender,
                             email = email,
-                            password = password
+                            password = password,
+                            levelCourse = level
                         )
                         studentViewModel.insertStudent(student)
                     } else {

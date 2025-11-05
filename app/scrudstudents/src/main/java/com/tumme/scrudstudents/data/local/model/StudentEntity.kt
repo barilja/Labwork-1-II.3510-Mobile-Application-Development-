@@ -11,6 +11,7 @@ data class StudentEntity(
     val firstName: String,
     val dateOfBirth: Date,
     val gender: Gender,
+    val levelCourse: LevelCourse,
     val email: String,
     val password: String
 )

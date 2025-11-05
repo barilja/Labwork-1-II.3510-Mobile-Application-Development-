@@ -7,7 +7,6 @@ import androidx.navigation.compose.*
 import androidx.navigation.navArgument
 //student ui imports
 import com.tumme.scrudstudents.ui.student.StudentListScreen
-import com.tumme.scrudstudents.ui.student.StudentFormScreen
 import com.tumme.scrudstudents.ui.student.StudentDetailScreen
 import com.tumme.scrudstudents.ui.student.StudentHomeScreen
 //course ui imports
@@ -23,7 +22,6 @@ import com.tumme.scrudstudents.ui.subscribe.SubscribeEditScreen
 //authentication ui import
 import com.tumme.scrudstudents.ui.authentication.LoginScreen
 import com.tumme.scrudstudents.ui.authentication.RegisterScreen
-import com.tumme.scrudstudents.ui.teacher.TeacherHomeScreen
 //teacher ui import
 import com.tumme.scrudstudents.ui.teacher.TeacherHomeScreen
 import com.tumme.scrudstudents.ui.teacher.TeacherStudentList
@@ -69,11 +67,6 @@ fun AppNavHost() {
                 onNavigateToDetail = { id -> navController.navigate("student_detail/$id") },
                 onNavigateToSubscriptions = {navController.navigate(Routes.SUBSCRIBE_LIST)},
                 onNavigateToCourses = {navController.navigate(Routes.COURSE_LIST)}
-            )
-        }
-        composable(Routes.STUDENT_FORM) {
-            StudentFormScreen(//goes back to the student list screen
-                onSaved = { navController.popBackStack() }
             )
         }
         composable(//how the navigation passes the useful parameters to the addressed next screen

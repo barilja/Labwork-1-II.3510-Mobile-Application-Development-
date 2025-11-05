@@ -58,8 +58,8 @@ fun SubscribeListScreen(
 
             // Table header (pure UI component)
             TableHeader(
-                cells = listOf("Course ID", "Score"),
-                weights = listOf(0.5f, 0.5f)
+                cells = listOf("Course ID","course name","ECTS", "Score"),
+                weights = listOf(0.5f,0.5f,0.5f, 0.5f)
             )
 
             Spacer(modifier = Modifier.height(8.dp))

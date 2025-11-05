@@ -4,11 +4,13 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tumme.scrudstudents.data.local.model.CourseEntity
+import com.tumme.scrudstudents.data.local.model.StudentEntity
 import com.tumme.scrudstudents.data.local.model.SubscribeEntity
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -20,12 +22,21 @@ fun SubscribeFormScreen(
 ) {
     // ViewModel exposes list of courses as a StateFlow → collected here to update UI automatically
     val courses by viewModel.courses.collectAsState()
-
+    var student by remember { mutableStateOf<StudentEntity?>(null) }
     val context = LocalContext.current // Only needed for showing Toast (UI concern)
 
     // State variables for the dropdown UI (not ViewModel, because these are temporary UI states)
     var courseMenuExpanded by remember { mutableStateOf(false) }
     var selectedCourse by remember { mutableStateOf<CourseEntity?>(null) }
+    LaunchedEffect(studentId) {
+        student = viewModel.getStudentById(studentId)
+    }
+
+    val filteredCourses = remember(courses, student) {
+        student?.let { s ->
+            courses.filter { it.levelCourse == s.levelCourse }
+        } ?: emptyList()
+    }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
 
@@ -47,7 +58,7 @@ fun SubscribeFormScreen(
                 onDismissRequest = { courseMenuExpanded = false }
             ) {
                 // UI builds dropdown options from ViewModel-provided courses list
-                courses.forEach { course ->
+                filteredCourses.forEach { course ->
                     DropdownMenuItem(
                         text = { Text(course.nameCourse) },
                         onClick = {
