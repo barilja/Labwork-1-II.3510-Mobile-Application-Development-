@@ -1,7 +1,6 @@
 package com.tumme.scrudstudents.data.local.dao
 
 import androidx.room.*
-import com.tumme.scrudstudents.data.local.model.StudentEntity
 import com.tumme.scrudstudents.data.local.model.TeacherEntity
 import kotlinx.coroutines.flow.Flow
 @Dao

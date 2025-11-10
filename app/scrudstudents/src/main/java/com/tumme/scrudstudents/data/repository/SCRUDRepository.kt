@@ -5,11 +5,13 @@ import com.tumme.scrudstudents.data.local.dao.StudentDao
 import com.tumme.scrudstudents.data.local.dao.SubscribeDao
 import com.tumme.scrudstudents.data.local.dao.TeacherDao
 import com.tumme.scrudstudents.data.local.dao.TeachDao
+import com.tumme.scrudstudents.data.local.dao.AdminDao
 import com.tumme.scrudstudents.data.local.model.CourseEntity
 import com.tumme.scrudstudents.data.local.model.StudentEntity
 import com.tumme.scrudstudents.data.local.model.SubscribeEntity
 import com.tumme.scrudstudents.data.local.model.TeacherEntity
 import com.tumme.scrudstudents.data.local.model.TeachEntity
+import com.tumme.scrudstudents.data.local.model.AdminEntity
 import kotlinx.coroutines.flow.Flow
 
 class SCRUDRepository(
@@ -17,7 +19,8 @@ class SCRUDRepository(
     private val courseDao: CourseDao,
     private val subscribeDao: SubscribeDao,
     private val teacherDao: TeacherDao,
-    private val teachDao: TeachDao
+    private val teachDao: TeachDao,
+    private val adminDao:AdminDao
 ) {
     //Students
     /*
@@ -76,7 +79,10 @@ class SCRUDRepository(
     suspend fun deleteTeach(teach: TeachEntity) = teachDao.delete(teach)
     fun getTeachesByTeacher(tId: Int): Flow<List<TeachEntity>> = teachDao.getTeachesByTeacher(tId)
     fun getTeachesByCourse(cId: Int): Flow<List<TeachEntity>> = teachDao.getTeachesByCourse(cId)
-
+    suspend fun insertAdmin(admin:AdminEntity)=adminDao.insert(admin)
+    suspend fun deleteAdmin(admin:AdminEntity)=adminDao.delete(admin)
+    suspend fun getAdminById(id:Int)=adminDao.getAdminById(id)
+    suspend fun getAdminByEmail(email:String)=adminDao.getAdminByEmail(email)
 
 
 }

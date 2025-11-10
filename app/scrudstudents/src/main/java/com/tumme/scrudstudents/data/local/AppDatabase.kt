@@ -8,15 +8,17 @@ import com.tumme.scrudstudents.data.local.dao.StudentDao
 import com.tumme.scrudstudents.data.local.dao.SubscribeDao
 import com.tumme.scrudstudents.data.local.dao.TeacherDao
 import com.tumme.scrudstudents.data.local.dao.TeachDao
+import com.tumme.scrudstudents.data.local.dao.AdminDao
 import com.tumme.scrudstudents.data.local.model.StudentEntity
 import com.tumme.scrudstudents.data.local.model.CourseEntity
 import com.tumme.scrudstudents.data.local.model.SubscribeEntity
 import com.tumme.scrudstudents.data.local.model.TeachEntity
 import com.tumme.scrudstudents.data.local.model.TeacherEntity
+import com.tumme.scrudstudents.data.local.model.AdminEntity
 
 // `entities`: Specifies all the table entities that belong in this database.
 @Database(entities = [StudentEntity::class, CourseEntity::class, SubscribeEntity::class,
-    TeacherEntity::class, TeachEntity::class], version = 3)
+    TeacherEntity::class, TeachEntity::class, AdminEntity::class], version = 5)
 // The @TypeConverters annotation tells Room to use the defined Converters class for data type conversions (e.g., Date to Long).
 @TypeConverters(Converters::class)
 // This abstract class represents the app's database. It extends RoomDatabase.
@@ -28,4 +30,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun subscribeDao(): SubscribeDao
     abstract fun teacherDao(): TeacherDao
     abstract fun teachDao(): TeachDao
+    abstract fun adminDao():AdminDao
 }

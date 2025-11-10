@@ -30,7 +30,8 @@ import com.tumme.scrudstudents.ui.teacher.TeacherMarksScreen
 //teach ui import
 import com.tumme.scrudstudents.ui.teaches.TeachListScreen
 import com.tumme.scrudstudents.ui.teaches.TeachFormScreen
-
+//admin ui import
+import com.tumme.scrudstudents.ui.admin.AdminHome
 
 object Routes {
     //student routes
@@ -59,6 +60,8 @@ object Routes {
     //teach routes
     const val TEACH_LIST="teach_list/{teacherId}"
     const val TEACH_FORM="teach_form/{teacherId}"
+    //admin routes
+    const val ADMIN_HOME="admin_home/{adminId}"
 }
 
 @Composable
@@ -129,7 +132,11 @@ fun AppNavHost() {
             onLoginSuccess = {role,id->
                 if(role=="Teacher"){
                     navController.navigate("teacher_home/$id")
-                }else{
+                }
+                else if(role=="Admin"){
+                    navController.navigate("admin_home/$id")
+                }
+                else{
                     navController.navigate("student_home/$id")
                 }
             }
@@ -251,6 +258,16 @@ fun AppNavHost() {
             TeacherMarksScreen(
                 teacherId,
                 onNavigateBack = {navController.navigate("teacher_home/$teacherId")}
+            )
+        }
+        //admin home screen
+        composable(
+            route = "admin_home/{adminId}",
+            arguments = listOf(navArgument("adminId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val adminId = backStackEntry.arguments?.getInt("adminId") ?: -1
+            AdminHome(adminId,
+                onLogout = {navController.navigate(Routes.LOGIN)}
             )
         }
     }

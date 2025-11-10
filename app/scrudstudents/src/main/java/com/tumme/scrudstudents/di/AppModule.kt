@@ -28,6 +28,7 @@ object AppModule {
     @Provides fun provideSubscribeDao(db: AppDatabase): SubscribeDao = db.subscribeDao()
     @Provides fun provideTeacherDao(db: AppDatabase): TeacherDao = db.teacherDao()
     @Provides fun provideTeachDao(db: AppDatabase): TeachDao = db.teachDao()
+    @Provides fun provideAdminDao(db: AppDatabase): AdminDao=db.adminDao()
 
     @Provides
     @Singleton
@@ -36,12 +37,14 @@ object AppModule {
         courseDao: CourseDao,
         subscribeDao: SubscribeDao,
         teacherDao: TeacherDao,
-        teachDao: TeachDao
+        teachDao: TeachDao,
+        adminDao:AdminDao
     ): SCRUDRepository = SCRUDRepository(
         studentDao,
         courseDao,
         subscribeDao,
         teacherDao,
-        teachDao
+        teachDao,
+        adminDao
     )
 }

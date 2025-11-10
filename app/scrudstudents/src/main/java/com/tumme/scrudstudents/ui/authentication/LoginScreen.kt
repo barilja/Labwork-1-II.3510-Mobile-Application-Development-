@@ -10,6 +10,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tumme.scrudstudents.ui.student.StudentListViewModel
 import com.tumme.scrudstudents.ui.teacher.TeacherViewModel
+import com.tumme.scrudstudents.ui.admin.AdminViewModel
+import com.tumme.scrudstudents.data.local.model.AdminEntity
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -17,9 +19,20 @@ import kotlinx.coroutines.launch
 fun LoginScreen(
     studentViewModel: StudentListViewModel = hiltViewModel(),
     teacherViewModel: TeacherViewModel = hiltViewModel(),
+    adminViewModel: AdminViewModel=hiltViewModel(),
     onLoginSuccess: (role: String, userId: Int) -> Unit = { _, _ -> },
     onNavigateToRegister: () -> Unit = {}
 ) {
+    LaunchedEffect(Unit) {
+        // create the admin instance
+        val admin = AdminEntity(
+            idAdmin=1,
+            email = "admin@gmail.com",
+            password = "test"
+        )
+            adminViewModel.insertAdmin(admin)
+    }
+
     var role by remember { mutableStateOf("Student") }
     var email by remember { mutableStateOf("test@gmail.com") }
     var password by remember { mutableStateOf("test") }
@@ -66,6 +79,15 @@ fun LoginScreen(
                             MaterialTheme.colorScheme.surfaceVariant
                     )
                 ) { Text("Teacher") }
+                Button(
+                    onClick = { role = "Admin" },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (role == "Admin")
+                            MaterialTheme.colorScheme.primaryContainer
+                        else
+                            MaterialTheme.colorScheme.surfaceVariant
+                    )
+                ) { Text("Admin") }
             }
 
             Spacer(Modifier.height(16.dp))
@@ -113,7 +135,19 @@ fun LoginScreen(
                                     errorMessage = null
                                     loginSuccess = "Student" to student.idStudent
                                 }
-                            } else {
+                            }
+                            else if(role=="Admin"){
+                                val admin=adminViewModel.getAdminByEmail(email)
+                                if(admin==null){
+                                    errorMessage="No admin found with this email."
+                                } else if(admin.password!=password){
+                                    errorMessage="Incorrect password."
+                                } else {
+                                    errorMessage=null
+                                    loginSuccess="Admin" to admin.idAdmin
+                                }
+                            }
+                            else {
                                 val teacher = teacherViewModel.getTeacherByEmail(email)
                                 if (teacher == null) {
                                     errorMessage = "No teacher found with this email."
