@@ -6,7 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -47,7 +47,7 @@ fun TeacherMarksScreen(
                 title = { Text("Assign Marks") }, // Title of the page
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) { // Back button
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
@@ -73,7 +73,10 @@ fun TeacherMarksScreen(
             } else {
                 // LazyColumn efficiently displays large lists
                 LazyColumn {
-                    items(teacherSubscribes) { sub ->
+                    items(
+                        items = teacherSubscribes,
+                        key = { "${it.studentId}_${it.courseId}" } // or just it.idSubscribe if you have one
+                    ) { sub ->
                         val course = courses.find { it.idCourse == sub.courseId } // Find course name
                         TeacherMarkRow(
                             subscribe = sub, // Current subscription row
@@ -135,5 +138,5 @@ fun TeacherMarkRow(
             Icon(Icons.Default.Save, contentDescription = "Save Score")
         }
     }
-    Divider() // Row separator
+    HorizontalDivider() // Row separator
 }
