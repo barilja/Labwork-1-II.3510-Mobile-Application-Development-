@@ -63,4 +63,5 @@ class TeachViewModel @Inject constructor(
 
     // Retrieves a list of teaches filtered by course id.
     suspend fun getSubscribe(id: Int) = repo.getTeachesByCourse(id)
+    suspend fun getTeachByCourse(id:Int)=repo.getTeachByCourse(id)
 }

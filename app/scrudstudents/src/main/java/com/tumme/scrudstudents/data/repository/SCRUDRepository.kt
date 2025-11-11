@@ -83,6 +83,7 @@ class SCRUDRepository(
     suspend fun deleteAdmin(admin:AdminEntity)=adminDao.delete(admin)
     suspend fun getAdminById(id:Int)=adminDao.getAdminById(id)
     suspend fun getAdminByEmail(email:String)=adminDao.getAdminByEmail(email)
+    suspend fun getTeachByCourse(id:Int)=teachDao.getTeachByCourse(id)
 
 
 }

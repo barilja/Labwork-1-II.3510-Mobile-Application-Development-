@@ -6,7 +6,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -36,7 +36,7 @@ fun SubscribeListScreen(
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) { // Delegates navigation to NavHost controller
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back to Home"
                         )
                     }
@@ -58,8 +58,8 @@ fun SubscribeListScreen(
 
             // Table header (pure UI component)
             TableHeader(
-                cells = listOf("Course ID","course name","ECTS", "Score"),
-                weights = listOf(0.5f,0.5f,0.5f, 0.5f)
+                cells = listOf("Course ID","course name","ECTS","Professor", "Score"),
+                weights = listOf(0.5f,0.5f,0.5f,0.5f,0.5f)
             )
 
             Spacer(modifier = Modifier.height(8.dp))

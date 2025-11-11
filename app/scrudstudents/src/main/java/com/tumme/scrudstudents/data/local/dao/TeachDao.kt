@@ -20,4 +20,6 @@ interface TeachDao {
 
     @Query("SELECT * FROM teach WHERE courseId = :cId")
     fun getTeachesByCourse(cId: Int): Flow<List<TeachEntity>>
+    @Query("SELECT * FROM teach WHERE courseId = :cId limit 1")
+    suspend fun getTeachByCourse(cId: Int): TeachEntity?
 }
