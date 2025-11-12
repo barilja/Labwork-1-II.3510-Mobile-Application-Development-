@@ -7,8 +7,10 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tumme.scrudstudents.R
 import com.tumme.scrudstudents.data.local.model.CourseEntity
 import com.tumme.scrudstudents.data.local.model.StudentEntity
 import com.tumme.scrudstudents.data.local.model.SubscribeEntity
@@ -38,7 +40,9 @@ fun SubscribeFormScreen(
         } ?: emptyList()
     }
 
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp)) {
 
         // UI dropdown for selecting a Course — UI reads ViewModel state but does NOT modify DB directly
         ExposedDropdownMenuBox(
@@ -49,9 +53,11 @@ fun SubscribeFormScreen(
                 value = selectedCourse?.nameCourse ?: "",
                 onValueChange = {},
                 readOnly = true, // UI is selection-driven, manual typing is disabled
-                label = { Text("Select Course") },
+                label = { Text(stringResource(R.string.select_course_student)) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = courseMenuExpanded) },
-                modifier = Modifier.menuAnchor().fillMaxWidth()
+                modifier = Modifier
+                    .menuAnchor()
+                    .fillMaxWidth()
             )
             ExposedDropdownMenu(
                 expanded = courseMenuExpanded,
@@ -75,7 +81,8 @@ fun SubscribeFormScreen(
         // When saving, UI triggers ViewModel action → ViewModel calls Repository → Repository updates DB
         Button(onClick = {
             if (selectedCourse == null) {
-                Toast.makeText(context, "Please select a course.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context,
+                    context.getString(R.string.please_select_a_course), Toast.LENGTH_SHORT).show()
             } else {
                 // UI prepares entity object (model layer object)
                 val subscribe = SubscribeEntity(
@@ -91,7 +98,7 @@ fun SubscribeFormScreen(
                 onSaved()
             }
         }) {
-            Text("Save Subscription")
+            Text(stringResource(R.string.save_subscription))
         }
     }
 }

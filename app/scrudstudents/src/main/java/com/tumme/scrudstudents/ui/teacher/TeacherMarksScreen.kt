@@ -11,8 +11,10 @@ import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tumme.scrudstudents.R
 import com.tumme.scrudstudents.data.local.model.SubscribeEntity
 import com.tumme.scrudstudents.ui.subscribe.SubscribeViewModel
 import com.tumme.scrudstudents.ui.course.CourseViewModel
@@ -44,7 +46,7 @@ fun TeacherMarksScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Assign Marks") }, // Title of the page
+                title = { Text(stringResource(R.string.assign_marks)) }, // Title of the page
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) { // Back button
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -61,7 +63,11 @@ fun TeacherMarksScreen(
         ) {
             // Display table header with column names and proportional weights
             TableHeader(
-                cells = listOf("Student ID", "Course ID", "Course Name", "Score", "Action"),
+                cells = listOf(stringResource(R.string.student_id_marks),
+                    stringResource(R.string.course_id_marks),
+                    stringResource(R.string.course_name_marks),
+                    stringResource(R.string.score_marks), stringResource(R.string.action_marks)
+                ),
                 weights = listOf(0.15f, 0.15f, 0.35f, 0.15f, 0.2f)
             )
 
@@ -69,7 +75,7 @@ fun TeacherMarksScreen(
 
             // Show a message if there are no students in this teacher's courses
             if (teacherSubscribes.isEmpty()) {
-                Text("No students enrolled in your courses.")
+                Text(stringResource(R.string.no_students_enrolled_in_your_courses))
             } else {
                 // LazyColumn efficiently displays large lists
                 LazyColumn {

@@ -19,6 +19,8 @@ import com.tumme.scrudstudents.ui.teacher.TeacherViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.ui.res.stringResource
+import com.tumme.scrudstudents.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,7 +54,7 @@ fun RegisterScreen(
     var registrationSuccess by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Register") }) },
+        topBar = { TopAppBar(title = { Text(stringResource(R.string.register_page)) }) },
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
 
@@ -75,7 +77,7 @@ fun RegisterScreen(
                         else
                             MaterialTheme.colorScheme.surfaceVariant
                     )
-                ) { Text("Student") }
+                ) { Text(stringResource(R.string.student_register_button)) }
 
                 Button(
                     onClick = { userType = "Teacher" },
@@ -85,24 +87,30 @@ fun RegisterScreen(
                         else
                             MaterialTheme.colorScheme.surfaceVariant
                     )
-                ) { Text("Teacher") }
+                ) { Text(stringResource(R.string.teacher_register_button)) }
             }
 
             Spacer(Modifier.height(16.dp))
 
             // --- Input fields ---
-            TextField(value = firstName, onValueChange = { firstName = it }, label = { Text("First Name") }, modifier = Modifier.fillMaxWidth())
+            TextField(value = firstName, onValueChange = { firstName = it }, label = { Text(
+                stringResource(R.string.first_name_register)
+            ) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
-            TextField(value = lastName, onValueChange = { lastName = it }, label = { Text("Last Name") }, modifier = Modifier.fillMaxWidth())
+            TextField(value = lastName, onValueChange = { lastName = it }, label = { Text(
+                stringResource(R.string.last_name_register)
+            ) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
-            TextField(value = dateOfBirthText, onValueChange = { dateOfBirthText = it }, label = { Text("Date of Birth (yyyy-MM-dd)") }, modifier = Modifier.fillMaxWidth())
+            TextField(value = dateOfBirthText, onValueChange = { dateOfBirthText = it }, label = { Text(
+                stringResource(R.string.date_of_birth_yyyy_mm_dd_register)
+            ) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
-            TextField(value = email, onValueChange = { email = it }, label = { Text("Email") }, modifier = Modifier.fillMaxWidth())
+            TextField(value = email, onValueChange = { email = it }, label = { Text(stringResource(R.string.email_register)) }, modifier = Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
             TextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Password") },
+                label = { Text(stringResource(R.string.password_register)) },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
             )
@@ -110,7 +118,7 @@ fun RegisterScreen(
             // --- Student-specific ---
             if (userType == "Student") {
                 Spacer(Modifier.height(8.dp))
-                Text("Gender:")
+                Text(stringResource(R.string.gender_register))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Gender.entries.forEach { g ->
                         Button(
@@ -197,7 +205,7 @@ fun RegisterScreen(
                 },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
-                Text("Register")
+                Text(stringResource(R.string.register_button))
             }
 
             Spacer(Modifier.height(12.dp))
@@ -207,7 +215,7 @@ fun RegisterScreen(
                 onClick = { onNavigateToRegister() },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
-                Text("Already have an account? Login!")
+                Text(stringResource(R.string.already_have_an_account_login))
             }
         }
 

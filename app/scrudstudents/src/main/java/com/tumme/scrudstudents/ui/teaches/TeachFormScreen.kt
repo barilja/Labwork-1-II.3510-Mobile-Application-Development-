@@ -6,8 +6,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tumme.scrudstudents.R
 import com.tumme.scrudstudents.data.local.model.CourseEntity
 import com.tumme.scrudstudents.data.local.model.TeachEntity
 
@@ -27,7 +29,9 @@ fun TeachFormScreen(
     var courseMenuExpanded by remember { mutableStateOf(false) }
     var selectedCourse by remember { mutableStateOf<CourseEntity?>(null) }
 
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp)) {
 
         // Dropdown displays available courses fetched from Repository via ViewModel
         ExposedDropdownMenuBox(
@@ -38,9 +42,10 @@ fun TeachFormScreen(
                 value = selectedCourse?.nameCourse ?: "",
                 onValueChange = {},
                 readOnly = true,
-                label = { Text("Select Course") },
+                label = { Text(stringResource(R.string.select_course_teacher)) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = courseMenuExpanded) },
-                modifier = Modifier.menuAnchor().fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
             )
             ExposedDropdownMenu(
                 expanded = courseMenuExpanded,
@@ -63,7 +68,8 @@ fun TeachFormScreen(
         // Save action triggers ViewModel -> Repository -> Database write operation
         Button(onClick = {
             if (selectedCourse == null) {
-                Toast.makeText(context, "Please select a course.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context,
+                    context.getString(R.string.please_select_a_course_teacher), Toast.LENGTH_SHORT).show()
             } else {
                 // Entity prepared based on UI selections
                 val teach = TeachEntity(
@@ -78,7 +84,7 @@ fun TeachFormScreen(
                 onSaved()
             }
         }) {
-            Text("Save Teach")
+            Text(stringResource(R.string.save_teach))
         }
     }
 }

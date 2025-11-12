@@ -6,12 +6,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tumme.scrudstudents.R
 import com.tumme.scrudstudents.ui.components.TableHeader
 import com.tumme.scrudstudents.ui.teaches.TeachViewModel
 import com.tumme.scrudstudents.ui.subscribe.SubscribeViewModel
@@ -60,10 +62,10 @@ fun TeacherStudentList(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Your Students") },
+                title = { Text(stringResource(R.string.your_students)) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back to Home")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back to Home")
                     }
                 }
             )
@@ -76,7 +78,11 @@ fun TeacherStudentList(
                 .padding(16.dp)
         ) {
             TableHeader(
-                cells = listOf("Student ID", "Full Name", "Course ID", "Course Name"),
+                cells = listOf(stringResource(R.string.student_id_teacher_list),
+                    stringResource(R.string.full_name_teacher_list),
+                    stringResource(R.string.course_id_teacher_list),
+                    stringResource(R.string.course_name_teacher_list)
+                ),
                 weights = listOf(0.2f, 0.4f, 0.2f, 0.4f)
             )
 
@@ -84,7 +90,7 @@ fun TeacherStudentList(
 
             // UI displays result from composed, joined state, without querying repository directly
             if (studentCourseDetails.isEmpty()) {
-                Text("No students enrolled in your courses.")
+                Text(stringResource(R.string.no_students_enrolled_in_your_courses_student_list))
             } else {
                 LazyColumn {
                     items(studentCourseDetails) { item ->

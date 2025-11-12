@@ -18,8 +18,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tumme.scrudstudents.R
 import com.tumme.scrudstudents.data.local.model.StudentEntity
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -45,7 +47,7 @@ fun StudentHomeScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Student Home Page") }, // Simple app bar title
+                title = { Text(stringResource(R.string.student_home_page)) }, // Simple app bar title
             )
         }
     ) { padding ->
@@ -57,34 +59,42 @@ fun StudentHomeScreen(
         ) {
             // Show loading text while student data is being fetched
             if (student == null) {
-                Text("Loading...")
+                Text(stringResource(R.string.loading))
             } else {
                 // Display student information once loaded
-                Text("ID: ${student!!.idStudent}") // Student ID
-                Text("Name: ${student!!.firstName} ${student!!.lastName}") // Full Name
-                Text("Date of Birth: ${student!!.dateOfBirth.let { dateFormat.format(it) }}") // DOB formatted
-                Text("Email: ${student!!.email}") // Email
-                Text("Level: ${student!!.levelCourse}") // Current level/course of the student
+                Text(stringResource(R.string.id_student_home, student!!.idStudent)) // Student ID
+                Text(
+                    stringResource(
+                        R.string.name_student_home,
+                        student!!.firstName,
+                        student!!.lastName
+                    )) // Full Name
+                Text(
+                    stringResource(
+                        R.string.date_of_birth_student_home,
+                        student!!.dateOfBirth.let { dateFormat.format(it) })) // DOB formatted
+                Text(stringResource(R.string.email_student_home, student!!.email)) // Email
+                Text(stringResource(R.string.level_student_home, student!!.levelCourse)) // Current level/course of the student
 
                 Spacer(modifier = Modifier.height(24.dp)) // Space before buttons
 
                 // Button to navigate to the student's course list
                 Button(onClick = { onNavigateToCourseList(student!!.idStudent) }) {
-                    Text("Go to Course List")
+                    Text(stringResource(R.string.go_to_course_list))
                 }
 
                 Spacer(modifier = Modifier.height(12.dp)) // Small spacing between buttons
 
                 // Button to navigate to the student's final grades page
                 Button(onClick = { onNavigateToFinalGrades(student!!.idStudent) }) {
-                    Text("Go to Final Grades Page")
+                    Text(stringResource(R.string.go_to_final_grades_page))
                 }
 
                 Spacer(modifier = Modifier.height(12.dp)) // Space before logout button
 
                 // Logout button
                 Button(onClick = { onLogout() }) {
-                    Text("Logout")
+                    Text(stringResource(R.string.logout_student_home))
                     Alignment.Center // Ensures button content is centered
                 }
             }

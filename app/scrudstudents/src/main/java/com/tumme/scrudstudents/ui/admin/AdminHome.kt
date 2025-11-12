@@ -7,8 +7,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tumme.scrudstudents.R
 import com.tumme.scrudstudents.ui.student.StudentListViewModel
 import com.tumme.scrudstudents.ui.teacher.TeacherViewModel
 import kotlinx.coroutines.launch
@@ -32,7 +34,7 @@ fun AdminHome(
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Admin Dashboard") }) },
+        topBar = { TopAppBar(title = { Text(stringResource(R.string.admin_dashboard)) }) },
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
         Column(
@@ -41,11 +43,11 @@ fun AdminHome(
                 .padding(padding)
                 .padding(16.dp)
         ) {
-            Text("Teachers", style = MaterialTheme.typography.titleLarge)
+            Text(stringResource(R.string.teachers_admin_home), style = MaterialTheme.typography.titleLarge)
             Spacer(Modifier.height(8.dp))
 
             if (teachers.isEmpty()) {
-                Text("No teachers found.")
+                Text(stringResource(R.string.no_teachers_found))
             } else {
                 LazyColumn(
                     modifier = Modifier
@@ -67,7 +69,12 @@ fun AdminHome(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Column {
-                                    Text("${teacher.firstName} ${teacher.lastName}")
+                                    Text(
+                                        stringResource(
+                                            R.string.teacher_name_admin_home,
+                                            teacher.firstName,
+                                            teacher.lastName
+                                        ))
                                     Text(teacher.email, style = MaterialTheme.typography.bodySmall)
                                 }
                                 Button(
@@ -81,7 +88,7 @@ fun AdminHome(
                                         containerColor = MaterialTheme.colorScheme.errorContainer
                                     )
                                 ) {
-                                    Text("Delete")
+                                    Text(stringResource(R.string.delete_admin_function))
                                 }
                             }
                         }
@@ -90,11 +97,11 @@ fun AdminHome(
             }
 
             Spacer(Modifier.height(16.dp))
-            Text("Students", style = MaterialTheme.typography.titleLarge)
+            Text(stringResource(R.string.students_admin_home), style = MaterialTheme.typography.titleLarge)
             Spacer(Modifier.height(8.dp))
 
             if (students.isEmpty()) {
-                Text("No students found.")
+                Text(stringResource(R.string.no_students_found))
             } else {
                 LazyColumn(
                     modifier = Modifier
@@ -116,7 +123,12 @@ fun AdminHome(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Column {
-                                    Text("${student.firstName} ${student.lastName}")
+                                    Text(
+                                        stringResource(
+                                            R.string.student_name_Admin_home,
+                                            student.firstName,
+                                            student.lastName
+                                        ))
                                     Text(student.email, style = MaterialTheme.typography.bodySmall)
                                 }
                                 Button(
@@ -130,7 +142,7 @@ fun AdminHome(
                                         containerColor = MaterialTheme.colorScheme.errorContainer
                                     )
                                 ) {
-                                    Text("Delete")
+                                    Text(stringResource(R.string.delete_admin_function))
                                 }
                             }
                         }
@@ -144,7 +156,7 @@ fun AdminHome(
                 onClick = { onLogout() },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
-                Text("Logout")
+                Text(stringResource(R.string.logout))
             }
         }
     }

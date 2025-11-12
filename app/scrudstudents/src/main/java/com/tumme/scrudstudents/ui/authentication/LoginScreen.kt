@@ -5,9 +5,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tumme.scrudstudents.R
 import com.tumme.scrudstudents.ui.student.StudentListViewModel
 import com.tumme.scrudstudents.ui.teacher.TeacherViewModel
 import com.tumme.scrudstudents.ui.admin.AdminViewModel
@@ -45,7 +47,7 @@ fun LoginScreen(
     var loginSuccess by remember { mutableStateOf<Pair<String, Int>?>(null) }
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Login page") }) },
+        topBar = { TopAppBar(title = { Text(stringResource(R.string.login_page)) }) },
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
         Column(
@@ -56,7 +58,7 @@ fun LoginScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start
         ) {
-            Text("Login as:")
+            Text(stringResource(R.string.login_as))
             Spacer(Modifier.height(8.dp))
 
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -68,7 +70,7 @@ fun LoginScreen(
                         else
                             MaterialTheme.colorScheme.surfaceVariant
                     )
-                ) { Text("Student") }
+                ) { Text(stringResource(R.string.student_button_login)) }
 
                 Button(
                     onClick = { role = "Teacher" },
@@ -78,7 +80,7 @@ fun LoginScreen(
                         else
                             MaterialTheme.colorScheme.surfaceVariant
                     )
-                ) { Text("Teacher") }
+                ) { Text(stringResource(R.string.teacher_login_button)) }
                 Button(
                     onClick = { role = "Admin" },
                     colors = ButtonDefaults.buttonColors(
@@ -87,7 +89,7 @@ fun LoginScreen(
                         else
                             MaterialTheme.colorScheme.surfaceVariant
                     )
-                ) { Text("Admin") }
+                ) { Text(stringResource(R.string.admin_login_button)) }
             }
 
             Spacer(Modifier.height(16.dp))
@@ -164,7 +166,7 @@ fun LoginScreen(
                 },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
-                Text("Login")
+                Text(stringResource(R.string.login_button))
             }
 
             Spacer(Modifier.height(12.dp))
@@ -173,7 +175,7 @@ fun LoginScreen(
                 onClick = { onNavigateToRegister() },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
-                Text("Don't have an account? Register!")
+                Text(stringResource(R.string.don_t_have_an_account_register))
             }
         }
 

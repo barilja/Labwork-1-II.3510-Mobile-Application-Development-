@@ -10,8 +10,10 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tumme.scrudstudents.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,7 +34,7 @@ fun SubscribeListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Your Courses") },
+                title = { Text(stringResource(R.string.your_courses_student)) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) { // Delegates navigation to NavHost controller
                         Icon(
@@ -58,7 +60,12 @@ fun SubscribeListScreen(
 
             // Table header (pure UI component)
             TableHeader(
-                cells = listOf("Course ID","course name","ECTS","Professor", "Score"),
+                cells = listOf(stringResource(R.string.course_id_student),
+                    stringResource(R.string.course_name_student),
+                    stringResource(R.string.ects_student),
+                    stringResource(R.string.professor_student),
+                    stringResource(R.string.score_student)
+                ),
                 weights = listOf(0.5f,0.5f,0.5f,0.5f,0.5f)
             )
 
@@ -66,7 +73,7 @@ fun SubscribeListScreen(
 
             if (studentSubscribes.isEmpty()) {
                 // UI reaction to state result from ViewModel
-                Text("You are not subscribed to any courses yet.")
+                Text(stringResource(R.string.you_are_not_subscribed_to_any_courses_yet))
             } else {
                 // UI list renderer
                 LazyColumn(modifier = Modifier.fillMaxSize()) {

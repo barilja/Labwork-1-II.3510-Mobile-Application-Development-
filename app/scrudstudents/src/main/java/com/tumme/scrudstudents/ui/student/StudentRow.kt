@@ -63,5 +63,5 @@ fun StudentRow(
         }
     }
     // Displays a horizontal line to separate this row from the next.
-    Divider()
+    HorizontalDivider()
 }

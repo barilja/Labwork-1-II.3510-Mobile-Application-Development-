@@ -4,14 +4,15 @@ import com.tumme.scrudstudents.ui.components.TableHeader
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tumme.scrudstudents.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -24,19 +25,17 @@ fun TeachListScreen(
     // The ViewModel exposes a StateFlow; collectAsState converts it into Compose state for UI updates.
     val teaches by viewModel.teaches.collectAsState()
 
-    // Scroll state retained across recompositions (useful if table grows).
-    val scrollState = rememberScrollState()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Your Courses") },
+                title = { Text(stringResource(R.string.your_courses_teacher)) },
                 navigationIcon = {
                     // The back button triggers navigation controlled from the ViewModel or NavGraph, not the UI.
                     IconButton(onClick = onNavigateBack) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Back to Home"
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back_to_home_teacher)
                         )
                     }
                 }
@@ -57,7 +56,10 @@ fun TeachListScreen(
         ) {
             // Table column headers (UI structure, not MVVM-critical).
             TableHeader(
-                cells = listOf("ID", "Course Name", "ECTS", "Level"),
+                cells = listOf(stringResource(R.string.id_course_teacher),
+                    stringResource(R.string.course_name_teacher),
+                    stringResource(R.string.ects_teacher), stringResource(R.string.level_teacher)
+                ),
                 weights = listOf(0.2f, 0.7f, 0.3f, 0.3f)
             )
 

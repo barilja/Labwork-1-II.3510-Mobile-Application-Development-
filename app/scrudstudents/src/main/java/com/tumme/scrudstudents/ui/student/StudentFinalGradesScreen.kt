@@ -17,6 +17,8 @@ import com.tumme.scrudstudents.data.local.model.SubscribeEntity
 import com.tumme.scrudstudents.data.local.model.CourseEntity
 import android.graphics.pdf.PdfDocument
 import android.os.Environment
+import androidx.compose.ui.res.stringResource
+import com.tumme.scrudstudents.R
 import java.io.File
 import java.io.FileOutputStream
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,7 +59,7 @@ fun StudentFinalGradesScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Final Grades") },
+                title = { Text(stringResource(R.string.final_grades_student)) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(androidx.compose.material.icons.Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -70,7 +72,7 @@ fun StudentFinalGradesScreen(
                 exportToPdf(studentSubscribes, courses, studentId)
                 showExportMessage = true
             }) {
-                Text("PDF")
+                Text(stringResource(R.string.pdf_button))
             }
         }
     ) { padding ->
@@ -81,11 +83,14 @@ fun StudentFinalGradesScreen(
                 .padding(16.dp)
         ) {
             if (showExportMessage) {
-                Text("PDF exported to Downloads", color = MaterialTheme.colorScheme.primary)
+                Text(stringResource(R.string.pdf_exported_to_downloads), color = MaterialTheme.colorScheme.primary)
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
-            Text("Final Grade: ${finalGrade?.let { String.format("%.2f", it) } ?: "No grades yet"}",
+            Text(
+                stringResource(
+                    R.string.final_grade,
+                    finalGrade?.let { String.format("%.2f", it) } ?: "No grades yet"),
                 style = MaterialTheme.typography.titleMedium
             )
 
@@ -95,10 +100,10 @@ fun StudentFinalGradesScreen(
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .horizontalScroll(scrollState)) {
-                Text("Course ID", modifier = Modifier.width(100.dp))
-                Text("Course Name", modifier = Modifier.width(200.dp))
-                Text("ECTS", modifier = Modifier.width(80.dp))
-                Text("Score", modifier = Modifier.width(100.dp))
+                Text(stringResource(R.string.course_id_grade), modifier = Modifier.width(100.dp))
+                Text(stringResource(R.string.course_name_grade), modifier = Modifier.width(200.dp))
+                Text(stringResource(R.string.ects_grade), modifier = Modifier.width(80.dp))
+                Text(stringResource(R.string.score_grade), modifier = Modifier.width(100.dp))
             }
 
             Spacer(modifier = Modifier.height(8.dp))

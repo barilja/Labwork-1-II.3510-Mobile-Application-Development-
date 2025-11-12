@@ -41,7 +41,7 @@ fun TeachRow(
         // Display fetched course information.
         // If still loading, fallback strings avoid UI crashes.
         Text(
-            text = course?.idCourse.toString() ?: "Loading...",
+            text = course?.idCourse.toString(),
             modifier = Modifier.width(100.dp)
         )
         Text(
@@ -49,11 +49,11 @@ fun TeachRow(
             modifier = Modifier.width(150.dp)
         )
         Text(
-            text = course?.ectsCourse.toString() ?: "Loading...",
+            text = course?.ectsCourse.toString(),
             modifier = Modifier.width(150.dp)
         )
         Text(
-            text = course?.levelCourse.toString() ?: "Loading...",
+            text = course?.levelCourse.toString(),
             modifier = Modifier.width(150.dp)
         )
 
@@ -68,5 +68,5 @@ fun TeachRow(
         }
     }
 
-    Divider()
+    HorizontalDivider()
 }
