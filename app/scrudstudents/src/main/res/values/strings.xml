@@ -87,4 +87,23 @@
     <string name="select_course_teacher">Select Course</string>
     <string name="please_select_a_course_teacher">Please select a course.</string>
     <string name="save_teach">Save Teach</string>
+    <string name="error_fill_all_fields">Please fill in all fields.</string>
+    <string name="error_no_student_found">No student found with this email.</string>
+    <string name="error_incorrect_password">Incorrect password.</string>
+    <string name="error_no_admin_found">No admin found with this email.</string>
+    <string name="error_no_teacher_found">No teacher found with this email.</string>
+    <string name="login_successful">Login successful!</string>
+    <string name="error_invalid_date_format">Invalid date format (must be YYYY-MM-DD).</string>
+    <string name="error_email_password_empty">Email and password cannot be empty.</string>
+    <string name="registration_successful">Registration successful!</string>
+    <string name="teacher_deleted_message">Teacher deleted.</string>
+    <string name="student_deleted_message">Student deleted.</string>
+    <string name="no_grades_yet">No grades yet</string>
+    <string name="not_evaluated_yet">Not evaluated yet</string>
+    <string name="pdf_header_student_grades">Student %1$d - Final Grades</string>
+    <string name="pdf_course_id_header">Course ID</string>
+    <string name="pdf_course_name_header">Course Name</string>
+    <string name="pdf_ects_header">ECTS</string>
+    <string name="pdf_score_header">Score</string>
+    <string name="pdf_not_evaluated">Not evaluated</string>
 </resources>

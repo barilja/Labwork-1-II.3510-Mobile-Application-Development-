@@ -53,6 +53,11 @@ fun RegisterScreen(
     // State to trigger snackbar and navigation
     var registrationSuccess by remember { mutableStateOf(false) }
 
+    //internationalization of error messages
+    val invalidDateFormatError = stringResource(R.string.error_invalid_date_format)
+    val emptyFieldsError = stringResource(R.string.error_email_password_empty)
+    val successMessage = stringResource(R.string.registration_successful)
+
     Scaffold(
         topBar = { TopAppBar(title = { Text(stringResource(R.string.register_page)) }) },
         snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -168,11 +173,11 @@ fun RegisterScreen(
                 onClick = {
                     val parsedDate = sdf.parse(dateOfBirthText)
                     if (parsedDate == null) {
-                        errorMessage = "Invalid date format"
+                        errorMessage = invalidDateFormatError
                         return@Button
                     }
                     if (email.isBlank() || password.isBlank()) {
-                        errorMessage = "Email and password cannot be empty"
+                        errorMessage = emptyFieldsError
                         return@Button
                     }
 
@@ -222,7 +227,7 @@ fun RegisterScreen(
         // --- Snackbar and navigation effect ---
         if (registrationSuccess) {
             LaunchedEffect(registrationSuccess) {
-                snackbarHostState.showSnackbar("Registration successful!")
+                snackbarHostState.showSnackbar(successMessage)
                 onRegistered()
                 registrationSuccess = false
             }

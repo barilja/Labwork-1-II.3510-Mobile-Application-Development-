@@ -33,6 +33,10 @@ fun AdminHome(
 
     val snackbarHostState = remember { SnackbarHostState() }
 
+    //internationalization of errors
+    val teacherDeletedMessage = stringResource(R.string.teacher_deleted_message)
+    val studentDeletedMessage = stringResource(R.string.student_deleted_message)
+
     Scaffold(
         topBar = { TopAppBar(title = { Text(stringResource(R.string.admin_dashboard)) }) },
         snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -81,7 +85,7 @@ fun AdminHome(
                                     onClick = {
                                         coroutineScope.launch {
                                             teacherViewModel.deleteTeacher(teacher)
-                                            snackbarHostState.showSnackbar("Teacher deleted")
+                                            snackbarHostState.showSnackbar(teacherDeletedMessage)
                                         }
                                     },
                                     colors = ButtonDefaults.buttonColors(
@@ -135,7 +139,7 @@ fun AdminHome(
                                     onClick = {
                                         coroutineScope.launch {
                                             studentViewModel.deleteStudent(student)
-                                            snackbarHostState.showSnackbar("Student deleted")
+                                            snackbarHostState.showSnackbar(studentDeletedMessage)
                                         }
                                     },
                                     colors = ButtonDefaults.buttonColors(

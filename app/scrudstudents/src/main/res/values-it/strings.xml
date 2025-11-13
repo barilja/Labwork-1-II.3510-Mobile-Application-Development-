@@ -87,4 +87,23 @@
     <string name="select_course_teacher">Seleziona corso</string>
     <string name="please_select_a_course_teacher">Perfavore seleziona un corso.</string>
     <string name="save_teach">Salva insegnamento</string>
+    <string name="error_fill_all_fields">Perfavore riempi tutti i campi.</string>
+    <string name="error_no_student_found">Nessun studente trovato con questa email.</string>
+    <string name="error_incorrect_password">Password incorretta.</string>
+    <string name="error_no_admin_found">NNessun admin trovato con questa email.</string>
+    <string name="error_no_teacher_found">Nessun insegnate trovato con questa email.</string>
+    <string name="login_successful">Login eseguito con successo!</string>
+    <string name="error_invalid_date_format">Formato data invalido (must be YYYY-MM-DD).</string>
+    <string name="error_email_password_empty">Email e password non possono essere vuote.</string>
+    <string name="registration_successful">Registrazione eseguita con successo!</string>
+    <string name="teacher_deleted_message">Insegnante eliminato con successo.</string>
+    <string name="student_deleted_message">Studente eliminato con successo.</string>
+    <string name="no_grades_yet">Nessun voto per il momento</string>
+    <string name="not_evaluated_yet">Non valutato per il momento</string>
+    <string name="pdf_header_student_grades">Studente %1$d - Voti finali</string>
+    <string name="pdf_course_id_header">ID corso</string>
+    <string name="pdf_course_name_header">Nome corso</string>
+    <string name="pdf_ects_header">ECTS</string>
+    <string name="pdf_score_header">Voto</string>
+    <string name="pdf_not_evaluated">Non valutato</string>
 </resources>

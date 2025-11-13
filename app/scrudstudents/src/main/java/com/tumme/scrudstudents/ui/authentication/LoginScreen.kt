@@ -46,6 +46,13 @@ fun LoginScreen(
     // State to trigger snackbar and navigation
     var loginSuccess by remember { mutableStateOf<Pair<String, Int>?>(null) }
 
+    //internationalization of error messages and snackbar
+    val errorFillAllFields = stringResource(R.string.error_fill_all_fields)
+    val errorNoStudentFound = stringResource(R.string.error_no_student_found)
+    val errorIncorrectPassword = stringResource(R.string.error_incorrect_password)
+    val errorNoAdminFound = stringResource(R.string.error_no_admin_found)
+    val errorNoTeacherFound = stringResource(R.string.error_no_teacher_found)
+    val loginSuccessfulMessage = stringResource(R.string.login_successful)
     Scaffold(
         topBar = { TopAppBar(title = { Text(stringResource(R.string.login_page)) }) },
         snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -121,7 +128,7 @@ fun LoginScreen(
             Button(
                 onClick = {
                     if (email.isBlank() || password.isBlank()) {
-                        errorMessage = "Please fill in all fields."
+                        errorMessage = errorFillAllFields
                         return@Button
                     }
 
@@ -130,9 +137,9 @@ fun LoginScreen(
                             if (role == "Student") {
                                 val student = studentViewModel.getStudentByEmail(email)
                                 if (student == null) {
-                                    errorMessage = "No student found with this email."
+                                    errorMessage = errorNoStudentFound
                                 } else if (student.password != password) {
-                                    errorMessage = "Incorrect password."
+                                    errorMessage = errorIncorrectPassword
                                 } else {
                                     errorMessage = null
                                     loginSuccess = "Student" to student.idStudent
@@ -141,9 +148,9 @@ fun LoginScreen(
                             else if(role=="Admin"){
                                 val admin=adminViewModel.getAdminByEmail(email)
                                 if(admin==null){
-                                    errorMessage="No admin found with this email."
+                                    errorMessage=errorNoAdminFound
                                 } else if(admin.password!=password){
-                                    errorMessage="Incorrect password."
+                                    errorMessage=errorIncorrectPassword
                                 } else {
                                     errorMessage=null
                                     loginSuccess="Admin" to admin.idAdmin
@@ -152,9 +159,9 @@ fun LoginScreen(
                             else {
                                 val teacher = teacherViewModel.getTeacherByEmail(email)
                                 if (teacher == null) {
-                                    errorMessage = "No teacher found with this email."
+                                    errorMessage = errorNoTeacherFound
                                 } else if (teacher.password != password) {
-                                    errorMessage = "Incorrect password."
+                                    errorMessage = errorIncorrectPassword
                                 } else {
                                     errorMessage = null
                                     loginSuccess = "Teacher" to teacher.idTeacher
@@ -182,7 +189,7 @@ fun LoginScreen(
         // --- Snackbar and navigation after login ---
         loginSuccess?.let { (role, id) ->
             LaunchedEffect(loginSuccess) {
-                snackbarHostState.showSnackbar("Login successful!")
+                snackbarHostState.showSnackbar(loginSuccessfulMessage)
                 onLoginSuccess(role, id)
                 loginSuccess = null
             }

@@ -21,6 +21,8 @@ import androidx.compose.ui.res.stringResource
 import com.tumme.scrudstudents.R
 import java.io.File
 import java.io.FileOutputStream
+import android.content.Context
+import androidx.compose.ui.platform.LocalContext
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StudentFinalGradesScreen(
@@ -29,6 +31,8 @@ fun StudentFinalGradesScreen(
     courseViewModel: CourseViewModel = hiltViewModel(),
     onNavigateBack: () -> Unit = {}
 ) {
+
+    val context = LocalContext.current
 
     //variable to export the screen as pdf
     var showExportMessage by remember { mutableStateOf(false) }
@@ -42,7 +46,11 @@ fun StudentFinalGradesScreen(
     // Scroll state for horizontal scrolling
     val scrollState = rememberScrollState()
 
-    // Compute weighted final grade if you want: sum(score * ects)/sum(ects)
+    //internationalization of errors
+    val noGradesYetMessage = stringResource(R.string.no_grades_yet)
+    val notEvaluatedYetMessage = stringResource(R.string.not_evaluated_yet)
+
+    // Compute weighted final grade: sum(score * ects)/sum(ects)
     val finalGrade = remember(studentSubscribes, courses) {
         var totalScore = 0f
         var totalEcts = 0f
@@ -69,7 +77,7 @@ fun StudentFinalGradesScreen(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                exportToPdf(studentSubscribes, courses, studentId)
+                exportToPdf(context, studentSubscribes, courses, studentId)
                 showExportMessage = true
             }) {
                 Text(stringResource(R.string.pdf_button))
@@ -90,7 +98,7 @@ fun StudentFinalGradesScreen(
             Text(
                 stringResource(
                     R.string.final_grade,
-                    finalGrade?.let { String.format("%.2f", it) } ?: "No grades yet"),
+                    finalGrade?.let { String.format("%.2f", it) } ?: noGradesYetMessage),
                 style = MaterialTheme.typography.titleMedium
             )
 
@@ -121,7 +129,7 @@ fun StudentFinalGradesScreen(
                             Text(course.nameCourse, modifier = Modifier.width(200.dp))
                             Text(course.ectsCourse.toString(), modifier = Modifier.width(80.dp))
                             Text(
-                                text = if (sub.score > 0f) sub.score.toString() else "Not evaluated yet",
+                                text = if (sub.score > 0f) sub.score.toString() else notEvaluatedYetMessage,
                                 modifier = Modifier.width(100.dp)
                             )
                         }
@@ -132,7 +140,12 @@ fun StudentFinalGradesScreen(
     }
 }
 
-fun exportToPdf(subscribes: List<SubscribeEntity>, courses: List<CourseEntity>, studentId: Int) {
+fun exportToPdf(
+    context: Context, // Added Context parameter
+    subscribes: List<SubscribeEntity>,
+    courses: List<CourseEntity>,
+    studentId: Int
+) {
     val pdfDocument = PdfDocument()
     val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create() // A4 size in points
     val page = pdfDocument.startPage(pageInfo)
@@ -143,16 +156,20 @@ fun exportToPdf(subscribes: List<SubscribeEntity>, courses: List<CourseEntity>, 
 
     var y = 30f
 
-    // Header
-    canvas.drawText("Student $studentId - Final Grades", 30f, y, paint)
+    // Header - Used context to get localized string with formatting
+    val headerText = context.getString(R.string.pdf_header_student_grades, studentId)
+    canvas.drawText(headerText, 30f, y, paint)
     y += 30f
 
-    // Table header
-    canvas.drawText("Course ID", 30f, y, paint)
-    canvas.drawText("Course Name", 120f, y, paint)
-    canvas.drawText("ECTS", 350f, y, paint)
-    canvas.drawText("Score", 420f, y, paint)
+    // Table header - Used context to get localized strings
+    canvas.drawText(context.getString(R.string.pdf_course_id_header), 30f, y, paint)
+    canvas.drawText(context.getString(R.string.pdf_course_name_header), 120f, y, paint)
+    canvas.drawText(context.getString(R.string.pdf_ects_header), 350f, y, paint)
+    canvas.drawText(context.getString(R.string.pdf_score_header), 420f, y, paint)
     y += 20f
+
+    // Localized string for not evaluated score
+    val notEvaluatedText = context.getString(R.string.pdf_not_evaluated)
 
     // Table content
     subscribes.forEach { sub ->
@@ -161,7 +178,9 @@ fun exportToPdf(subscribes: List<SubscribeEntity>, courses: List<CourseEntity>, 
             canvas.drawText(course.idCourse.toString(), 30f, y, paint)
             canvas.drawText(course.nameCourse, 120f, y, paint)
             canvas.drawText(course.ectsCourse.toString(), 350f, y, paint)
-            canvas.drawText(if (sub.score > 0f) sub.score.toString() else "Not evaluated", 420f, y, paint)
+            // Used localized string for "Not evaluated"
+            val scoreText = if (sub.score > 0f) sub.score.toString() else notEvaluatedText
+            canvas.drawText(scoreText, 420f, y, paint)
             y += 20f
         }
     }
